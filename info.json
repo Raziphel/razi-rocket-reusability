@@ -1,12 +1,13 @@
 {
-    "name": "rocket-reusability",
-    "version": "1.0.6",
-    "title": "Rocket Reusability",
-    "author": "redplasticstraw",
-    "factorio_version": "2.0",
-    "dependencies": [
-        "base >= 2.0",
-        "space-age"
-    ],
-    "description": "A small Space Age extension that adds Used rockets and reprocessing of their chunks."
-  }
+  "name": "razi-rocket-reusability",
+  "version": "1.1.0",
+  "title": "Razi Rocket Reusability",
+  "author": "redplasticstraw (original); Raziphel (maintainer)",
+  "factorio_version": "2.1",
+  "dependencies": [
+    "base >= 2.1.0",
+    "space-age >= 2.1.0",
+    "! rocket-reusability"
+  ],
+  "description": "Recover used rockets in orbit, recycle their chunks into reusable materials, and guide wrecks with Remnant Beacons. Independent Factorio 2.1 continuation of Rocket Reusability."
+}

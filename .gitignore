@@ -1,1 +1,7 @@
-/.vscode
+*.zip
+dist/
+.DS_Store
+*.razi-backup-*
+__pycache__/
+node_modules/
+.tools/

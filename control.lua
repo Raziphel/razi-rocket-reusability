@@ -1,140 +1,131 @@
-debug_mode = settings.global["debug-mode"].value
+-- Factorio 2.1 maintenance of redplasticstraw's Rocket Reusability.
+-- Existing prototype names and interface are preserved for save compatibility.
+local DEFAULT_PACK = "space-platform-starter-pack"
 
-script.on_init(verify_whitelist)
-
-function verify_whitelist ()
-    storage.platform_type_whitelist = storage.platform_type_whitelist or {player = {}}
-    storage.platform_type_whitelist["player"]["space-platform-starter-pack"] = true
+local function debug_log(message)
+    if settings.global["debug-mode"].value then log("[razi-rocket-reusability] " .. message) end
 end
 
-remote.add_interface("rocket-reusability",
-{
-    add_whitelist = function (starter_pack_name, force_name) storage.platform_type_whitelist[force_name or "player"][starter_pack_name] = true end,
-    remove_whitelist = function (starter_pack_name, force_name) table.remove(storage.platform_type_whitelist[force_name or "player"][starter_pack_name]) end,
-    is_whitelisted = function (starter_pack_name, force_name) if storage.platform_type_whitelist[force_name or "player"][starter_pack_name] then return true else return false end end
-})
+local function whitelist_for(force)
+    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
+    local all = storage.platform_type_whitelist
+    all[force] = all[force] or {}
+    return all[force]
+end
 
-commands.add_command("reset-whitelist", "Resets the whitelist for space platform starter packs. Can cause unpredictable behavior with other mods, but useful for removing mods.", function (command)
-    storage.platform_type_whitelist = {player = {"space-platform-starter-pack"}}
+local function is_whitelisted(pack, force)
+    return pack == DEFAULT_PACK or whitelist_for(force or "player")[pack] == true
+end
+
+script.on_init(function()
+    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
 end)
 
+script.on_configuration_changed(function()
+    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
+    for _, allowed in pairs(storage.platform_type_whitelist) do
+        for _, pack in ipairs(allowed) do
+            if type(pack) == "string" then allowed[pack] = true end
+        end
+        for key in pairs(allowed) do
+            if type(key) == "number" then allowed[key] = nil end
+        end
+    end
+end)
 
-script.on_event(
-    {
-        defines.events.on_rocket_launched
-    },
-    function (event)
-        if event.rocket_silo and event.rocket_silo.valid then
+remote.add_interface("razi-rocket-reusability", {
+    add_whitelist = function(pack, force)
+        if type(pack) ~= "string" then return false end
+        whitelist_for(force or "player")[pack] = true
+        return true
+    end,
+    remove_whitelist = function(pack, force)
+        if type(pack) ~= "string" then return false end
+        whitelist_for(force or "player")[pack] = nil
+        return true
+    end,
+    is_whitelisted = function(pack, force)
+        return is_whitelisted(pack, force)
+    end
+})
 
-            verify_whitelist()
+commands.add_command("razi-rocket-reset-whitelist", "Clear custom starter packs for a force (default: player).", function(cmd)
+    local force = cmd.parameter and cmd.parameter ~= "" and cmd.parameter or "player"
+    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
+    storage.platform_type_whitelist[force] = {}
+    debug_log("Reset platform whitelist for " .. force)
+end)
 
-            debug_mode = settings.global["debug-mode"].value
-
-            if debug_mode then
-                game.print("A rocket has been launched")
-            end
-
-            local surface = event.rocket_silo.surface
-            local planet
-            for index, test_planet in pairs(game.planets) do
-                if test_planet.surface == surface then
-                    planet = test_planet
-                    break
-                end
-            end
-            if not planet then 
-                if debug_mode then
-                    game.print("Couldn't find associated planet for rocket launch.")
-                end
-                return 
-            else
-                if debug_mode then
-                    game.print("Launched from planet ".. planet.prototype.name)
-                end
-            end
-            ---@type LuaForce
-            local force = event.rocket_silo.force
-
-            if debug_mode then
-                game.print("Initial conditions OK")
-            end
-
-            if not force.is_space_platforms_unlocked() then return end
-            if not force.technologies["rocket-chunk-processing"].researched then return end
-
-            local whitelist = storage.platform_type_whitelist[force.name]
-
-            local platform_candidates = {}
-            local platform_count = 0
-            local priority_candidates = {}
-            local priority_count = 0
-            for index, platform in pairs(force.platforms) do
-                -- game.print(platform.name)
-                -- if platform.starter_pack then
-                --     game.print(platform.starter_pack.name.name)
-                -- else
-                --     game.print("there is no starter pack for this one!")
-                -- end
-                if true then
-                    if platform.surface then
-                        if platform.space_location then
-                            if platform.space_location.name == planet.prototype.name then
-
-                                table.insert(platform_candidates, platform)
-                                platform_count = platform_count + 1
-                                
-                                local candidates = platform.surface.find_entities_filtered({name = "remnant-beacon"})
-                                if #candidates > 0 then
-                                    if debug_mode then
-                                        game.print("we got a priority candidate")
-                                    end
-                                    ---@type LuaEntity
-                                    local remnant_beacon = candidates[1]
-                                    if remnant_beacon and remnant_beacon.valid then
-                                        -- if debug_mode then
-                                        --     game.print(remnant_beacon.name)
-                                        --     game.print(remnant_beacon.status)
-                                        -- end
-                                        if remnant_beacon.status == defines.entity_status.working or remnant_beacon.status == defines.entity_status.low_power then
-                                            if debug_mode then
-                                                game.print("adding priority")
-                                            end
-                                            table.insert(priority_candidates, platform)
-                                            priority_count = priority_count + 1
-                                        end
-                                    end
-                                end
-                            end
-                        end
+local function eligible_platforms(planet, force)
+    local candidates, priority = {}, {}
+    -- Factorio 2.1 returns built platforms at a given planet.
+    for _, platform in pairs(planet.get_space_platforms(force)) do
+        local pack = platform.starter_pack
+        local allow_all = settings.global["razi-rocket-reusability-allow-modded-platforms"].value
+        if (allow_all or not pack or is_whitelisted(pack.name, force.name))
+            and platform.hub and platform.hub.valid then
+            local surface = platform.surface
+            if surface then
+                candidates[#candidates + 1] = platform
+                for _, beacon in pairs(surface.find_entities_filtered({name = "remnant-beacon"})) do
+                    if beacon.valid and (beacon.status == defines.entity_status.working or
+                        beacon.status == defines.entity_status.low_power) then
+                        priority[#priority + 1] = platform
+                        break
                     end
                 end
             end
-
-            if #platform_candidates == 0 then
-                if debug_mode then
-                    game.print("Found no suitable platforms.")
-                end
-                return 
-            end
-
-            local target
-            if priority_count > 0 then
-                if debug_mode then
-                    game.print("We got a priority candidate!")
-                end
-                target = priority_candidates[math.random(1, priority_count)]
-            else
-                if debug_mode then
-                    game.print("There is no priority.")
-                end
-                target = platform_candidates[math.random(1, platform_count)]
-            end
-
-            if debug_mode then
-                game.print("Spawning asteroid on platform " .. target.name)
-            end
-
-            target.surface.create_entity({name = "used-rocket-asteroid", position = {math.random(-40, 40), -500}})
         end
     end
-)
+    return candidates, priority
+end
+
+local function spawn_wreck(platform)
+    local surface = platform.surface
+    local distance = settings.global["razi-rocket-reusability-spawn-distance"].value
+    -- Restore the published 1.0.7 collision-checking behaviour, absent from GitHub.
+    for _ = 1, 12 do
+        local position = {x = math.random(-80, 80), y = -distance - math.random(0, 40)}
+        if surface.can_place_entity({name = "used-rocket-asteroid", position = position}) then
+            if surface.create_entity({name = "used-rocket-asteroid", position = position}) then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+script.on_event(defines.events.on_rocket_launched, function(event)
+    local silo = event.rocket_silo
+    if not silo or not silo.valid then return end
+    local force = silo.force
+    if not force.is_space_platforms_unlocked() then return end
+    local research = force.technologies["rocket-chunk-processing"]
+    if not research or not research.researched then return end
+    if math.random() > settings.global["razi-rocket-reusability-recovery-chance"].value then return end
+
+    local planet
+    for _, candidate in pairs(game.planets) do
+        if candidate.surface == silo.surface then
+            planet = candidate
+            break
+        end
+    end
+    if not planet then
+        debug_log("Rocket launch without an associated planet")
+        return
+    end
+
+    local candidates, priority = eligible_platforms(planet, force)
+    local pool = #priority > 0 and priority or candidates
+    if #pool == 0 then
+        debug_log("No built platform in orbit of " .. planet.name)
+        return
+    end
+    local target = pool[math.random(#pool)]
+    if spawn_wreck(target) then
+        debug_log("Wreck spawned near " .. target.name)
+    else
+        debug_log("No safe wreck position near " .. target.name)
+    end
+end)

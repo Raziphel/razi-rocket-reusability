@@ -9,7 +9,7 @@ data:extend
     {
         type = "explosion",
         name = "used-rocket-explosion",
-        icon = "__rocket-reusability__/graphics/icons/incomplete-rocket-part.png",
+        icon = "__razi-rocket-reusability__/graphics/icons/incomplete-rocket-part.png",
         flags = { "not-on-map" },
         hidden = true,
         height = 0,
@@ -42,7 +42,7 @@ data:extend
         name = "used-rocket-asteroid",
         overkill_fraction = 0.01,
         localised_description = { "entity-description.used-rocket-asteroid" },
-        icon = "__rocket-reusability__/graphics/icons/used-rocket-icon.png",
+        icon = "__razi-rocket-reusability__/graphics/icons/used-rocket-icon.png",
         icon_size = 128,
         selection_box = { { -9, -9 }, { 9, 9 } },
         collision_box = { { -9, -9 }, { 9, 9 } },
@@ -57,20 +57,20 @@ data:extend
             brightness = 0.3,
             variations = {
                 color_texture = {
-                    filename = "__rocket-reusability__/graphics/asteroid/used-rocket.png",
+                    filename = "__razi-rocket-reusability__/graphics/asteroid/used-rocket.png",
                     width = 353,
                     height = 829,
                     scale = 1
                 },
                 normal_map = {
-                    filename = "__rocket-reusability__/graphics/asteroid/used-rocket-normal.png",
+                    filename = "__razi-rocket-reusability__/graphics/asteroid/used-rocket-normal.png",
                     premul_alpha = false,
                     width = 353,
                     height = 829,
                     scale = 1
                 },
                 roughness_map = {
-                    filename = "__rocket-reusability__/graphics/asteroid/used-rocket-roughness.png",
+                    filename = "__razi-rocket-reusability__/graphics/asteroid/used-rocket-roughness.png",
                     premul_alpha = false,
                     width = 353,
                     height = 829,
@@ -125,7 +125,7 @@ data:extend
             {
                 {
                 name = "start",
-                action = function() game.surfaces[1].create_entity{name="]] .. "used-rocket" .. [[", position = {0, 0}, velocity = {0, 0.011}} end
+                action = function() game.surfaces[1].create_entity{name="]] .. "used-rocket-asteroid" .. [[", position = {0, 0}, velocity = {0, 0.011}} end
                 },
                 {
                 condition = story_elapsed_check(]] .. "15" .. [[),
@@ -174,7 +174,7 @@ data:extend
     {
         type = "item",
         name = "rocket-chunk",
-        icon = "__rocket-reusability__/graphics/icons/rocket-chunk.png",
+        icon = "__razi-rocket-reusability__/graphics/icons/rocket-chunk.png",
         subgroup = "space-material",
         order = "e[rocket]-e[chunk]",
         inventory_move_sound = space_age_item_sounds.rock_inventory_move,
@@ -188,7 +188,7 @@ data:extend
         name = "rocket-chunk",
         overkill_fraction = 0.01,
         localised_description = { "entity-description.rocket-chunk" },
-        icon = "__rocket-reusability__/graphics/icons/rocket-chunk.png",
+        icon = "__razi-rocket-reusability__/graphics/icons/rocket-chunk.png",
         icon_size = 64,
         selection_box = { { -0.5, -0.5 }, { 0.5, 0.5 } },
         collision_box = { { -0.5, -0.5 }, { 0.5, 0.5 } },
@@ -203,20 +203,20 @@ data:extend
             brightness = 0.1,
             variations = {
                 color_texture = {
-                    filename = "__rocket-reusability__/graphics/asteroid/rocket-chunk.png",
+                    filename = "__razi-rocket-reusability__/graphics/asteroid/rocket-chunk.png",
                     width = 64,
                     height = 64,
                     scale = 0.5
                 },
                 normal_map = {
-                    filename = "__rocket-reusability__/graphics/asteroid/rocket-chunk-normal.png",
+                    filename = "__razi-rocket-reusability__/graphics/asteroid/rocket-chunk-normal.png",
                     premul_alpha = false,
                     width = 64,
                     height = 64,
                     scale = 0.5
                 },
                 roughness_map = {
-                    filename = "__rocket-reusability__/graphics/asteroid/rocket-chunk-roughness.png",
+                    filename = "__razi-rocket-reusability__/graphics/asteroid/rocket-chunk-roughness.png",
                     premul_alpha = false,
                     width = 64,
                     height = 64,
@@ -282,7 +282,7 @@ if add_incomplete then
     incomplete_rocket_part.stack_size = 50
     incomplete_rocket_part.hidden = false
 
-    incomplete_rocket_part.icon = "__rocket-reusability__/graphics/icons/incomplete-rocket-part.png"
+    incomplete_rocket_part.icon = "__razi-rocket-reusability__/graphics/icons/incomplete-rocket-part.png"
 
     data:extend { incomplete_rocket_part }
 
@@ -306,7 +306,7 @@ end
 local recipe = {
     type = "recipe",
     name = "rocket-chunk-processing",
-    icon = "__rocket-reusability__/graphics/icons/rocket-chunk-crushing.png",
+    icon = "__razi-rocket-reusability__/graphics/icons/rocket-chunk-crushing.png",
     category = "crushing",
     subgroup = "space-crushing",
     order = "b-a-d",
@@ -321,7 +321,7 @@ local recipe = {
     {
         { type = "item", name = "processing-unit",       amount_min = 3, amount_max = 10 },
         { type = "item", name = "low-density-structure", amount_min = 3, amount_max = 10 },
-        { type = "item", name = "rocket-chunk",          amount = 1,     probability = 0.1 }
+        { type = "item", name = "rocket-chunk",          amount = 1,     independent_probability = 0.1 }
     },
     allow_productivity = true,
     allow_decomposition = false
@@ -330,14 +330,14 @@ local recipe = {
 if add_incomplete then
     recipe.results = {
         { type = "item", name = "incomplete-rocket-part", amount_min = 3, amount_max = 10 },
-        { type = "item", name = "rocket-chunk",           amount = 1,     probability = 0.1 }
+        { type = "item", name = "rocket-chunk",           amount = 1,     independent_probability = 0.1 }
     }
 end
 
 local technology = {
         type = "technology",
         name = "rocket-chunk-processing",
-        icon = "__rocket-reusability__/graphics/icons/rocket-reusability-research.png",
+        icon = "__razi-rocket-reusability__/graphics/icons/rocket-reusability-research.png",
         icon_size = 256,
         effects =
         {
@@ -361,7 +361,7 @@ local technology = {
             },
             time = 60
         }
-    },
+    }
 
 data:extend { recipe }
 data:extend { technology }

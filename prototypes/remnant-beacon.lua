@@ -3,7 +3,7 @@ local item = table.deepcopy(data.raw["item"]["radar"])
 item.name = "remnant-beacon"
 item.place_result = "remnant-beacon"
 item.order = "g"
-item.icon = "__rocket-reusability__/graphics/icons/remnant-beacon.png"
+item.icon = "__razi-rocket-reusability__/graphics/icons/remnant-beacon.png"
 item.icon_size = 64
 item.stack_size = 1
 item.weight = 1000000
@@ -13,7 +13,7 @@ data:extend{item}
 local entity = table.deepcopy(data.raw["radar"]["radar"])
 
 entity.name = "remnant-beacon"
-entity.icon = "__rocket-reusability__/graphics/icons/remnant-beacon.png"
+entity.icon = "__razi-rocket-reusability__/graphics/icons/remnant-beacon.png"
 
 entity.minable = {mining_time = 1.0, result = "remnant-beacon"}
 
@@ -33,7 +33,7 @@ entity.integration_patch = nil
 entity.pictures = {
     layers = {
         {
-            filename = "__rocket-reusability__/graphics/entity/remnant-beacon/remnant-beacon.png",
+            filename = "__razi-rocket-reusability__/graphics/entity/remnant-beacon/remnant-beacon.png",
             priority = "low",
             width = 294,
             height = 407,
@@ -43,7 +43,7 @@ entity.pictures = {
             scale = 0.45
         },
         {
-            filename = "__rocket-reusability__/graphics/entity/remnant-beacon/remnant-beacon-shadow.png",
+            filename = "__razi-rocket-reusability__/graphics/entity/remnant-beacon/remnant-beacon-shadow.png",
             priority = "low",
             width = 424,
             height = 246,
@@ -66,7 +66,7 @@ entity.surface_conditions = {
     min = 0,
     max = 0
   }
-},
+}
 
 data:extend{entity}
 
@@ -89,7 +89,7 @@ data:extend{recipe}
 local technology = {
     type = "technology",
     name = "remnant-beacon",
-    icon = "__rocket-reusability__/graphics/icons/remnant-beacon-technology.png",
+    icon = "__razi-rocket-reusability__/graphics/icons/remnant-beacon-technology.png",
     icon_size = 256,
     effects =
     {

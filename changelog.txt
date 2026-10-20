@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0 (Razi continuation)
+Date: 20. 10. 2026
+  Compatibility:
+    - New internal name razi-rocket-reusability and original-mod incompatibility.
+    - All asset references, remote interface and console command renamed.
+    - Factorio 2.1 and Space Age compatibility, runtime and recipe API changes.
+  Fixes:
+    - Restored collision-aware used rocket spawning.
+    - Repaired whitelist management, remnant beacons and invalid Lua syntax.
+  Settings:
+    - Added recovery chance, spawn distance and modded platform support.
+  Maintenance:
+    - Attribution, documentation, zip packaging and offline validation.
+---------------------------------------------------------------------------------------------------
+Version: 1.0.7
+Date: 11. 20. 2024
+  Fixes (published portal changelog; the code was not committed upstream):
+    - Shortened the distance to avoid nonmoving asteroid optimization.
+    - Added basic collision checks for spawning asteroids.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.0.6
 Date: 11. 20. 2024
   Hotfix:
