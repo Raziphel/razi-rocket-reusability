@@ -27,6 +27,8 @@ New runtime-global settings:
 - `razi-rocket-reusability-spawn-distance`: 64 tiles, range 32-200; adjusted forward of long hulls.
 - `razi-rocket-reusability-allow-modded-platforms`: enabled.
 - `razi-rocket-reusability-max-active-wrecks`: 3, adjustable 1-12.
+- `razi-rocket-reusability-side-arrivals`: false (OFF, harder when enabled).
+- `razi-rocket-reusability-side-arrival-chance`: 35%, adjustable 0-100% when enabled.
 
 Use `/razi-rocket-reset-whitelist [force]` to clear custom starter packs.
 
@@ -58,6 +60,24 @@ dependency. You do not need K2SO or Razi Protocol to use the standalone mod.
 - Muluna and K2SO can both be enabled.
 
 See `K2SO_COMPATIBILITY.md` and `TEST_PLAN.md` for verification details.
+
+## Optional side-arriving wrecks (1.1.5)
+
+Enable **Side-arriving rocket wrecks (Harder)** in mod settings to allow used
+rockets to approach from the left or right of a space platform, instead of
+always coming from the front. This option is **OFF by default**.
+
+- Side arrival probability defaults to **35%** of eligible recoveries and can
+  be adjusted from 0% to 100% without restarting the game.
+- Wrecks are placed beyond observed platform foundations, checked for
+  collisions, and travel diagonally toward the hub. They approach faster
+  than ordinary front wrecks and can bypass front-only defenses.
+- A blocked/unsafe side is retried from the other side; if neither is safe,
+  the normal front approach is used rather than losing that salvage.
+- Rocket recovery probability, Remnant Beacon priority, and the existing
+  **active-wreck cap** remain in force. Side mode never creates extra wrecks.
+- **Warning:** side attacks are harder. Add side-facing turrets and asteroid
+  collection capacity, especially around large or irregular platforms.
 
 ## Historical report fixes (1.1.2)
 
@@ -95,9 +115,10 @@ npm install --prefix .tools --no-save fengari luaparse
 node scripts/test_razilib_integration.js /path/to/RaziLib
 node scripts/test_report_regressions.js /path/to/RaziLib
 node scripts/test_k2so_compatibility.js /path/to/RaziLib
+node scripts/test_side_arrivals.js /path/to/RaziLib
 ```
 
-Output: `dist/razi-rocket-reusability_1.1.4.zip`.
+Output: `dist/razi-rocket-reusability_1.1.5.zip`.
 
 **Not yet runtime verified**. Test with the 2.1 executable and Space Age, including multiple planets, platforms, beacons, modded starter packs, and old saves. See `PORTAL.md` for publishing guidance.
 

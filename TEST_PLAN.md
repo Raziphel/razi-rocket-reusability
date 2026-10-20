@@ -1,4 +1,4 @@
-# Manual acceptance tests: Factorio 2.1 / Razi Rocket Reusability 1.1.4
+# Manual acceptance tests: Factorio 2.1 / Razi Rocket Reusability 1.1.5
 
 Offline smoke tests in the repository are useful, but do **not** replace in-game testing. Use RAZI Library 1.2.0 or newer and Space Age. The original Rocket Reusability must be disabled.
 
@@ -37,6 +37,22 @@ Offline smoke tests in the repository are useful, but do **not** replace in-game
 21. Repeat with Muluna + K2SO together, both incomplete-parts setting choices, and modded platforms.
 22. Verify disabling K2SO leaves vanilla Space Age salvage functional.
 
+## Optional harder side approaches
+
+23. With side arrivals OFF, launch repeatedly and confirm all wrecks enter
+    from the front as before.
+24. Turn side arrivals ON (35% chance). Launch several rockets at a stationary
+    platform and observe genuine left/right approaches toward the hull.
+25. Test chance 0% (front only) and 100% (both sides eligible) while in-game.
+26. Test a short/narrow platform, a wide irregular platform and a long ship.
+    Wrecks must not materialize on top of foundation tiles.
+27. Block one side with nearby wrecks and verify the opposite side can receive
+    a wreck; block both and verify recovery falls back to the front.
+28. Confirm the existing maximum active wreck limit and Remnant Beacon
+    prioritization still apply. One launch must never create multiple wrecks.
+29. Confirm side approaches are dangerous but interceptable by side turrets.
+    Test both stopped and moving space platforms with Space Age and K2SO.
+
 ## Developer commands
 
 Run these in the repository's checkout:
@@ -46,6 +62,7 @@ Run these in the repository's checkout:
     node scripts/test_razilib_integration.js /path/to/RaziLib
     node scripts/test_report_regressions.js /path/to/RaziLib
     node scripts/test_k2so_compatibility.js /path/to/RaziLib
+    node scripts/test_side_arrivals.js /path/to/RaziLib
     python3 scripts/package.py
 
 The generated ZIP is a **development build**, not a verified release, until in-game acceptance testing has been completed.

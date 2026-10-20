@@ -7,7 +7,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 info = json.loads((root / "info.json").read_text())
 assert info["factorio_version"] == "2.1"
-assert info["version"] == "1.1.4"
+assert info["version"] == "1.1.5"
 assert "razi_lib >= 1.2.0" in info["dependencies"]
 assert "? planet-muluna" in info["dependencies"]
 assert "? Krastorio2-spaced-out >= 2.0.0" in info["dependencies"]
@@ -25,7 +25,8 @@ for file in lua_files:
         assert (root / reference).is_file(), f"{file}: missing {reference}"
 for name in ["razi-rocket-reusability-recovery-chance", "razi-rocket-reusability-spawn-distance",
              "razi-rocket-reusability-allow-modded-platforms",
-             "razi-rocket-reusability-max-active-wrecks"]:
+             "razi-rocket-reusability-max-active-wrecks",
+             "razi-rocket-reusability-side-arrivals", "razi-rocket-reusability-side-arrival-chance"]:
     assert name in (root / "settings.lua").read_text()
     assert name in (root / "locale/en/english.cfg").read_text()
 required = {
@@ -41,5 +42,8 @@ for name, modules in required.items():
     for module in modules:
         assert f'require("__razi_lib__/{module}")' in text, f"{name} missing RAZI Library {module}"
 assert 'require("compatibility/k2so").apply()' in (root / "data-final-fixes.lua").read_text()
+assert 'require("runtime/side-arrivals")' in (root / "control.lua").read_text()
+assert '"razi-rocket-reusability-side-arrivals", "runtime-global", false' in (root / "settings.lua").read_text()
+assert "WARNING: Makes recovery harder" in (root / "locale/en/english.cfg").read_text()
 assert "storage.platform_type_whitelist = nil" in (root / "control.lua").read_text()
 print(f"PASS: manifest, RAZI modules, probability, referenced assets, locale, {len(lua_files)} Lua files")

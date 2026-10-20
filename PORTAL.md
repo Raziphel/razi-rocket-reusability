@@ -15,6 +15,7 @@ What happens to all those rockets after launch? Razi Rocket Reusability brings s
 - **Recycle your materials:** Break wrecks into chunks and crush them into components for new rocket parts.
 - **Guide recoveries:** Powered Remnant Beacons prioritize selected platforms.
 - **Balance to taste:** Adjust recovery chance and spawn distance. Optional incomplete rocket parts help avoid material duplication.
+- **Optional harder side approaches:** Enable wrecks approaching from the left or right of platforms (OFF by default), with adjustable 0-100% side-arrival chance. Warning: add side-facing defenses!
 - **Space Age friendly:** Supports built platforms and other modded space locations.
 - **RAZI Library integration:** Shares reliable settings, recipes, prototype validation and runtime helpers. Does not require Razi Protocol.
 
@@ -37,7 +38,7 @@ Independent continuation maintained by **Raziphel**, based on **Rocket Reusabili
 
 ## Before publishing
 
-1. Verify the upload ZIP is named `razi-rocket-reusability_1.1.4.zip` and contains the same-name top-level directory.
+1. Verify the upload ZIP is named `razi-rocket-reusability_1.1.5.zip` and contains the same-name top-level directory.
 2. Run the offline validator and perform an actual Factorio 2.1 + Space Age game-load test.
 3. Check actual gameplay: launched rockets, orbiting platforms, recovery, beacons, recycling, and existing saves.
 4. Set the new Mod Portal slug to `razi-rocket-reusability`, confirm the owner and MIT licence, and link the repository.

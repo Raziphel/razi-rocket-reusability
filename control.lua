@@ -4,6 +4,7 @@ local Events = require("__razi_lib__/runtime/events")
 local Storage = require("__razi_lib__/runtime/storage")
 local Remote = require("__razi_lib__/runtime/remote")
 local Settings = require("__razi_lib__/lib/settings")
+local SideArrivals = require("runtime/side-arrivals")
 
 local state = Storage.namespace("razi_rocket_reusability", { platform_type_whitelist = {} })
 local events = Events.new()
@@ -95,7 +96,7 @@ local function eligible_platforms(planet, force)
     return candidates, priority
 end
 
-local function spawn_wreck(platform)
+local function spawn_front_wreck(platform)
     local surface, hub = platform.surface, platform.hub
     -- Work relative to the hub, not absolute space coordinates.
     local center = hub.position
@@ -136,6 +137,21 @@ local function spawn_wreck(platform)
         end
     end
     return false
+end
+
+-- Side approaches are an opt-in challenge. Their probability is conditional
+-- on the existing recovery roll, so they never add extra wrecks per launch.
+local function spawn_wreck(platform)
+    if Settings.enabled("razi-rocket-reusability-side-arrivals", false, "runtime-global") then
+        local chance = Settings.value("razi-rocket-reusability-side-arrival-chance", 35, "runtime-global")
+        if chance > 0 and math.random(100) <= chance then
+            local spawned, side = SideArrivals.try_spawn(platform,
+                Settings.value("razi-rocket-reusability-spawn-distance", 64, "runtime-global"))
+            if spawned then return true, side end
+            debug_log("Side lanes unsafe on " .. platform.name .. "; attempting normal front arrival")
+        end
+    end
+    return spawn_front_wreck(platform), "front"
 end
 
 events:on_event(defines.events.on_rocket_launched, function(event)
@@ -182,8 +198,9 @@ events:on_event(defines.events.on_rocket_launched, function(event)
         return
     end
     local target = pool[math.random(#pool)]
-    if spawn_wreck(target) then
-        debug_log("Wreck spawned near " .. target.name)
+    local spawned, approach = spawn_wreck(target)
+    if spawned then
+        debug_log("Wreck approaching " .. target.name .. " from the " .. approach)
     else
         debug_log("No safe wreck position near " .. target.name)
     end

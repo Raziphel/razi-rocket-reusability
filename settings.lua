@@ -8,5 +8,7 @@ data:extend({
     Settings.int("razi-rocket-reusability-spawn-distance", "runtime-global", 64, 32, 200, "d"),
     Settings.bool("razi-rocket-reusability-allow-modded-platforms", "runtime-global", true, "e"),
     Settings.int("razi-rocket-reusability-max-active-wrecks", "runtime-global", 3, 1, 12, "f"),
+    Settings.bool("razi-rocket-reusability-side-arrivals", "runtime-global", false, "g"),
+    Settings.int("razi-rocket-reusability-side-arrival-chance", "runtime-global", 35, 0, 100, "h"),
     Settings.bool("debug-mode", "runtime-global", false, "z"),
 })

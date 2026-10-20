@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.5
+Date: 21. 10. 2026
+  Features:
+    - Opt-in harder side-arriving wrecks (disabled by default).
+    - Adjustable 0-100% chance for a side approach; 35% default when enabled.
+    - Both port and starboard arrivals aim toward the platform hub.
+  Safety:
+    - Hull-aware side lanes, asteroid footprint checks, and collision tests.
+    - Retry opposite side before falling back to normal front approach.
+    - Preserve existing recovery probability, beacon selection and wreck cap.
+  Quality:
+    - Clear difficulty warning and runtime-changeable settings.
+    - Side-entry regression coverage for asymmetric and oversized platforms.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.4
 Date: 20. 10. 2026
   Graphics:
