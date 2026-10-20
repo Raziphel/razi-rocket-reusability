@@ -5,6 +5,7 @@ local Storage = require("__razi_lib__/runtime/storage")
 local Remote = require("__razi_lib__/runtime/remote")
 local Settings = require("__razi_lib__/lib/settings")
 local SideArrivals = require("runtime/side-arrivals")
+local ProtocolSettings = require("runtime/razi-protocol-settings")
 
 local state = Storage.namespace("razi_rocket_reusability", { platform_type_whitelist = {} })
 local events = Events.new()
@@ -139,10 +140,10 @@ local function spawn_front_wreck(platform)
     return false
 end
 
--- A Razi Protocol preset is a pack-wide choice, not a writable setting
--- belonging to this mod. Factorio cannot let Protocol write this mod's
--- runtime-global settings; read its startup preset on each launch instead.
--- Explicit standalone/Custom side arrivals still work normally.
+-- Razi Protocol cannot write another mod's saved settings. This owning mod
+-- can synchronize its OWN Map settings after the map starts, via native Lua.
+-- Until the first scheduled sync, this read maintains Hard/Nightmare behaviour.
+-- Standalone, Easy, Normal and Custom keep their saved manual preferences.
 local function side_arrivals_enabled()
     local manual = Settings.enabled("razi-rocket-reusability-side-arrivals", false, "runtime-global")
     local protocol = settings.startup["razi-difficulty-preset"]
@@ -218,3 +219,12 @@ events:on_event(defines.events.on_rocket_launched, function(event)
 end)
 
 events:install()
+
+-- One check each second, not every tick. This writes only OUR OWN
+-- runtime-global side-arrivals setting. In Hard/Nightmare the actual
+-- Mod Settings > Map checkbox becomes On; after leaving those modes
+-- the previously saved manual checkbox is restored. Never touch the
+-- other mods' values, startup settings, or on_load game state.
+script.on_nth_tick(60, function()
+    ProtocolSettings.sync(settings.startup, settings.global, state)
+end)

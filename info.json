@@ -1,6 +1,6 @@
 {
   "name": "razi-rocket-reusability",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "title": "Razi Rocket Reusability",
   "author": "redplasticstraw (original); Raziphel (maintainer)",
   "factorio_version": "2.1",
@@ -12,5 +12,5 @@
     "? planet-muluna",
     "! rocket-reusability"
   ],
-  "description": "Recover spent rockets as orbital wreckage, recycle their materials, and guide salvage with Remnant Beacons. Hard/Nightmare Razi Protocol campaigns automatically enable side-arriving wrecks; standalone/Custom approaches remain configurable."
+  "description": "Recover spent rockets as orbital wrecks. In Razi Protocol Hard/Nightmare, the mod now synchronizes its own Map setting for side-arriving wrecks; previous manual choices are restored on other difficulties."
 }

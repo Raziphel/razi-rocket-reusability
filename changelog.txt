@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.7
+Date: 21. 10. 2026
+  Razi Protocol integration:
+    - Hard/Nightmare now switch the source-owned Side-arriving wrecks Map setting itself On.
+    - Restore the player's original checkbox on Easy, Normal, Custom or standalone.
+    - Uses the native Factorio runtime settings API, once per second; no scripts outside the mod.
+    - Startup settings and foreign mods' settings are deliberately not modified.
+  Compatibility:
+    - Keep the original fallback for the first few ticks before settings synchronize.
+    - Original recovery probability, side approach chance and spawn safety stay unchanged.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.6
 Date: 21. 10. 2026
   Integration:

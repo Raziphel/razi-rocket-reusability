@@ -20,7 +20,7 @@ Beacons **choose a destination**. They do **not** increase the number or chance 
 - **Orbital rocket salvage:** Wrecks can approach moving or stationary space platforms.
 - **Recycling:** Process recovered rocket chunks into useful materials; optionally craft and recover incomplete rocket parts.
 - **Recovery control:** Configure the recovery chance, approach distance, and maximum intact wrecks per platform.
-- **Optional side approaches:** Let wrecks arrive from either side of a platform for an extra challenge. **Off by default** in standalone, Easy and Normal campaigns, with an adjustable 0–100% side-arrival chance. **Razi Protocol Hard and Nightmare automatically enable side approaches** at the configured chance, including when the ordinary side-arrival checkbox is off; Custom honours the checkbox.
+- **Optional side approaches:** Let wrecks arrive from either side of a platform for an extra challenge. **Off by default** in standalone, Easy and Normal campaigns, with an adjustable 0–100% side-arrival chance. **Razi Protocol Hard and Nightmare enable side approaches by updating Rocket Reusability's actual in-game Map setting** after the map begins. When leaving Hard/Nightmare, the original manual checkbox is restored; Easy, Normal and Custom retain their own choices. This is handled entirely by this mod's Lua code and needs no external program.
 - **Beacon priority:** Powered Remnant Beacons designate preferred recovery platforms.
 - **Modded platform support:** Includes compatibility handling for additional space locations and platform types.
 
@@ -48,7 +48,7 @@ All settings are available in Factorio's mod settings.
 | Wreck spawn distance | 64 tiles | Minimum approach distance; accounts for long hulls |
 | Allow modded platforms | On | Include constructed platforms from other mods |
 | Maximum active wrecks | 3 | Limit intact wrecks per platform |
-| Side-arriving wrecks | **Off** | Allow left/right approaches for an extra challenge |
+| Side-arriving wrecks | **Off** | Allow left/right approaches. In Razi Protocol Hard/Nightmare, this Map setting is actually switched On by Rocket Reusability on the next one-second check |
 | Side-arrival chance | 35% | Chance of a side approach when enabled, 0–100% |
 | Debug logging | Off | Write diagnostics to the Factorio log |
 
