@@ -52,12 +52,11 @@ data:extend
         collision_mask = { layers = { object = true }, not_colliding_with_itself = true },
         graphics_set = {
             rotation_speed = 0.0003 * (2),
-            normal_strength = 0.3,
-            lights = {
-
-            },
-            ambient_light = { 1.0, 1.0, 1.0 },
-            brightness = 0.3,
+            normal_strength = 0.22,
+            specular_strength = 0.6,
+            sss_amount = 0.8,
+            ambient_light = { 0.14, 0.15, 0.18, 1 },
+            brightness = 0.32,
             variations = {
                 color_texture = {
                     filename = "__razi-rocket-reusability__/graphics/asteroid/used-rocket.png",
@@ -144,13 +143,15 @@ data:extend
 
         -- asteroid properties
         flags = { "placeable-enemy", "placeable-off-grid", "not-repairable", "not-on-map" },
-        max_health = 5000,
-        mass = 500000,
+        max_health = 2000,
+        -- 2.1 uses this multiplier for platform collision damage.
+        damage_per_hp = 0.04,
+        mass = 120000,
         resistances = {
             {
                 type = "physical",
                 decrease = 0,
-                percent = 50
+                percent = 25
             },
             {
                 type = "electric",
@@ -160,7 +161,7 @@ data:extend
             {
                 type = "laser",
                 decrease = 0,
-                percent = 90
+                percent = 60
             },
             {
                 type = "explosion",
@@ -198,12 +199,11 @@ data:extend
         collision_mask = nil,
         graphics_set = {
             rotation_speed = 0.0003 * (6),
-            normal_strength = 0.3,
-            lights = {
-
-            },
-            ambient_light = { 1.0, 1.0, 1.0 },
-            brightness = 0.1,
+            normal_strength = 0.20,
+            specular_strength = 0.5,
+            sss_amount = 0.8,
+            ambient_light = { 0.13, 0.14, 0.16, 1 },
+            brightness = 0.30,
             variations = {
                 color_texture = {
                     filename = "__razi-rocket-reusability__/graphics/asteroid/rocket-chunk.png",

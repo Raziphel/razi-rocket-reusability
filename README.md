@@ -24,7 +24,7 @@ Legacy keys remain: `enable-incomplete-rocket-parts`, `enable-incomplete-rocket-
 
 New runtime-global settings:
 - `razi-rocket-reusability-recovery-chance`: 1.0 default, range 0-1.
-- `razi-rocket-reusability-spawn-distance`: 96 tiles, range 64-200.
+- `razi-rocket-reusability-spawn-distance`: 64 tiles, range 32-200; adjusted forward of long hulls.
 - `razi-rocket-reusability-allow-modded-platforms`: enabled.
 
 Use `/razi-rocket-reset-whitelist [force]` to clear custom starter packs.
@@ -39,6 +39,18 @@ Existing recipe, research, item and setting names remain stable. On upgrade,
 previously saved per-force platform starter-pack whitelists are migrated into
 RAZI-managed storage. This mod does not require Razi Protocol.
 
+## Historical report fixes (1.1.2)
+
+- Wrecks approach stationary platforms with explicit velocity.
+- Hull-aware positions avoid spawning inside long ships.
+- Collision damage is less extreme while wrecks remain worthwhile salvage.
+- Wreck and chunk lighting is dimmer and less reflective (visual testing pending).
+- Fully powered Remnant Beacons prioritize platforms, not spawn rate.
+- The default limit of three simultaneous wrecks per platform prevents backlogs.
+- Muluna rocket-part costs and productivity effects are preserved: only matched
+  processing-unit + low-density-structure pairs are converted.
+- Muluna is an optional load-order dependency, not a required mod.
+
 ## Development and release
 
 ```bash
@@ -48,9 +60,10 @@ python3 scripts/package.py
 # Optional local smoke tests against a checkout of published RAZI Library 1.2.0:
 npm install --prefix .tools --no-save fengari luaparse
 node scripts/test_razilib_integration.js /path/to/RaziLib
+node scripts/test_report_regressions.js /path/to/RaziLib
 ```
 
-Output: `dist/razi-rocket-reusability_1.1.1.zip`.
+Output: `dist/razi-rocket-reusability_1.1.2.zip`.
 
 **Not yet runtime verified**. Test with the 2.1 executable and Space Age, including multiple planets, platforms, beacons, modded starter packs, and old saves. See `PORTAL.md` for publishing guidance.
 

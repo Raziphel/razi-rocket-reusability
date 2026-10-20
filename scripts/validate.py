@@ -7,8 +7,9 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 info = json.loads((root / "info.json").read_text())
 assert info["factorio_version"] == "2.1"
-assert info["version"] == "1.1.1"
+assert info["version"] == "1.1.2"
 assert "razi_lib >= 1.2.0" in info["dependencies"]
+assert "? planet-muluna" in info["dependencies"]
 assert info["name"] == "razi-rocket-reusability"
 assert "! rocket-reusability" in info["dependencies"]
 assert any(d.startswith("space-age") for d in info["dependencies"])
@@ -22,7 +23,8 @@ for file in lua_files:
     for reference in references:
         assert (root / reference).is_file(), f"{file}: missing {reference}"
 for name in ["razi-rocket-reusability-recovery-chance", "razi-rocket-reusability-spawn-distance",
-             "razi-rocket-reusability-allow-modded-platforms"]:
+             "razi-rocket-reusability-allow-modded-platforms",
+             "razi-rocket-reusability-max-active-wrecks"]:
     assert name in (root / "settings.lua").read_text()
     assert name in (root / "locale/en/english.cfg").read_text()
 required = {

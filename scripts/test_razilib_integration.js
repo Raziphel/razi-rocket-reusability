@@ -54,8 +54,16 @@ for (const incomplete of [true, false]) {
     data = { raw = {
       item = { radar = {type="item",name="radar"}, ["rocket-part"] = {type="item",name="rocket-part",hidden=true} },
       radar = { radar = {type="radar",name="radar"} },
-      recipe = { ["rocket-part"] = {type="recipe", name="rocket-part", ingredients={}, results={}} },
-      technology = { ["rocket-silo"] = {type="technology",name="rocket-silo",effects={}} }
+      recipe = { ["rocket-part"] = {type="recipe", name="rocket-part",
+        ingredients={{type="item",name="processing-unit",amount=2},
+                     {type="item",name="low-density-structure",amount=2},
+                     {type="item",name="rocket-fuel",amount=2}},
+        maximum_productivity=3,allow_productivity=true,results={{type="item",name="rocket-part",amount=1}}} },
+      technology = {
+        ["rocket-silo"] = {type="technology",name="rocket-silo",effects={}},
+        ["rocket-part-productivity-muluna"] = {type="technology",name="rocket-part-productivity-muluna",
+          effects={{type="change-recipe-productivity",recipe="rocket-part",change=0.1}}}
+      }
     }}
     function data:extend(entries)
       for _, e in ipairs(entries) do
@@ -78,7 +86,18 @@ for (const incomplete of [true, false]) {
     assert(data.raw["double-setting"]["razi-rocket-reusability-recovery-chance"])
     assert(data.raw.recipe["rocket-chunk-processing"].categories[1] == "crushing")
     assert((data.raw.item["incomplete-rocket-part"] ~= nil) == ${incomplete})
-    assert((data.raw.recipe["rocket-part"].ingredients[2] ~= nil) == ${incomplete})
+    local rocket=data.raw.recipe["rocket-part"]
+    assert(rocket.maximum_productivity==3 and rocket.allow_productivity)
+    local bonuses=data.raw.technology["rocket-part-productivity-muluna"].effects
+    assert(#bonuses==1 and bonuses[1].recipe=="rocket-part" and bonuses[1].change==0.1)
+    assert(#rocket.ingredients == (${incomplete} and 2 or 3))
+    local fuel,parts,processor=0,0,0
+    for _, ingredient in pairs(rocket.ingredients) do
+      if ingredient.name=="rocket-fuel" then fuel=ingredient.amount end
+      if ingredient.name=="incomplete-rocket-part" then parts=ingredient.amount end
+      if ingredient.name=="processing-unit" then processor=ingredient.amount end
+    end
+    assert(fuel==2 and parts==(${incomplete} and 2 or 0) and processor==(${incomplete} and 0 or 2))
   `);
   console.log("PASS: RAZI Library data stage (incomplete parts " + incomplete + ")");
 }
@@ -88,7 +107,7 @@ execute(`
   settings={global={
     ["debug-mode"]={value=false},
     ["razi-rocket-reusability-allow-modded-platforms"]={value=true},
-    ["razi-rocket-reusability-spawn-distance"]={value=96},
+    ["razi-rocket-reusability-spawn-distance"]={value=64},
     ["razi-rocket-reusability-recovery-chance"]={value=1}
   }}
   local handlers={}
@@ -114,10 +133,17 @@ execute(`
   local spawned=0
   local orbit={
     find_entities_filtered=function() return {} end,
+    count_entities_filtered=function() return 0 end,
+    find_tiles_filtered=function() return {} end,
     can_place_entity=function() return true end,
-    create_entity=function() spawned=spawned+1; return {} end
+    create_entity=function(args)
+      assert(args.velocity and args.velocity.y>0)
+      assert(args.position.y < -32)
+      spawned=spawned+1
+      return {}
+    end
   }
-  local platform={name="test",hub={valid=true},surface=orbit}
+  local platform={name="test",hub={valid=true,position={x=0,y=0}},surface=orbit,speed=0}
   local ground={}
   local planet={name="nauvis",surface=ground,get_space_platforms=function()return {platform}end}
   game={planets={planet}}
@@ -126,4 +152,6 @@ execute(`
   handlers[42]({rocket_silo={valid=true,force=force,surface=ground}})
   assert(spawned==1)
 `);
-console.log("PASS: RAZI Library runtime events, storage migration, remote API, spawn");
+console.log("PASS: RAZI Library runtime events, storage migration, remote API, stationary spawn");
+
+module.exports = { execute };

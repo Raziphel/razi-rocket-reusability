@@ -10,7 +10,7 @@ name = f"{info['name']}_{info['version']}"
 dist = root / "dist"
 dist.mkdir(exist_ok=True)
 archive = dist / (name + ".zip")
-excluded = {".git", "dist", "scripts", ".tools", ".gitignore", "PORTAL.md", "__pycache__", ".DS_Store"}
+excluded = {".git", "dist", "scripts", ".tools", ".gitignore", "PORTAL.md", "TEST_PLAN.md", "__pycache__", ".DS_Store"}
 with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as z:
     for path in sorted(root.rglob("*")):
         if not path.is_file() or path.suffix == ".zip" or any(part in excluded or ".razi-backup-" in part for part in path.parts):

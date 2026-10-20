@@ -1,6 +1,6 @@
 {
   "name": "razi-rocket-reusability",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "title": "Razi Rocket Reusability",
   "author": "redplasticstraw (original); Raziphel (maintainer)",
   "factorio_version": "2.1",
@@ -8,7 +8,8 @@
     "base >= 2.1.0",
     "space-age >= 2.1.0",
     "razi_lib >= 1.2.0",
+    "? planet-muluna",
     "! rocket-reusability"
   ],
-  "description": "Recover used rocket wrecks and recycle them into materials. Requires RAZI Library and Space Age. Maintained Factorio 2.1 continuation."
+  "description": "Recover used rockets in orbit with safer wrecks, predictable debris spawning and balanced recycling. Requires Space Age and RAZI Library."
 }

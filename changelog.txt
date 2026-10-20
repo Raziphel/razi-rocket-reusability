@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+Date: 20. 10. 2026
+  Fixes:
+    - Explicit wreck velocity for stationary platforms.
+    - Hub-relative spawns with long-hull and collision clearance checks.
+    - Muluna-friendly recipe conversion preserves input costs and productivity.
+  Balance and visuals:
+    - Less extreme wreck durability and collision damage.
+    - Reduced washed-out asteroid lighting and specular reflection.
+    - Only fully powered Remnant Beacons prioritize spawns.\n    - Cap simultaneous wrecks per platform, default 3.
+  Quality:
+    - Optional Muluna dependency and regression smoke tests.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.1
 Date: 20. 10. 2026
   Integration:

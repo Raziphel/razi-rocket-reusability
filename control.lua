@@ -84,8 +84,7 @@ local function eligible_platforms(planet, force)
             if surface then
                 candidates[#candidates + 1] = platform
                 for _, beacon in pairs(surface.find_entities_filtered({name = "remnant-beacon"})) do
-                    if beacon.valid and (beacon.status == defines.entity_status.working or
-                        beacon.status == defines.entity_status.low_power) then
+                    if beacon.valid and beacon.status == defines.entity_status.working then
                         priority[#priority + 1] = platform
                         break
                     end
@@ -97,15 +96,43 @@ local function eligible_platforms(planet, force)
 end
 
 local function spawn_wreck(platform)
-    local surface = platform.surface
-    local distance = Settings.value("razi-rocket-reusability-spawn-distance", 96, "runtime-global")
-    -- Restore the published 1.0.7 collision-checking behaviour, absent from GitHub.
+    local surface, hub = platform.surface, platform.hub
+    -- Work relative to the hub, not absolute space coordinates.
+    local center = hub.position
+    local distance = Settings.value("razi-rocket-reusability-spawn-distance", 64, "runtime-global")
+    local northernmost = center.y
+
+    -- An unusually long ship may stretch beyond the nominal spawning lane.
+    -- Keep the 18x18 wreck fully ahead of actual platform foundation tiles.
+    local tiles = surface.find_tiles_filtered({
+        name = "space-platform-foundation",
+        area = {{center.x - 24, center.y - 256}, {center.x + 24, center.y + 4}},
+    })
+    for _, tile in pairs(tiles) do
+        if tile.position.y < northernmost then northernmost = tile.position.y end
+    end
+
+    local y = math.min(center.y - distance, northernmost - 18)
     for _ = 1, 12 do
-        local position = {x = math.random(-80, 80), y = -distance - math.random(0, 40)}
-        if surface.can_place_entity({name = "used-rocket-asteroid", position = position}) then
-            if surface.create_entity({name = "used-rocket-asteroid", position = position}) then
-                return true
-            end
+        local position = {
+            x = center.x + math.random(-8, 8),
+            y = y - math.random(0, 12),
+        }
+        -- can_place_entity alone is not a sufficient platform-floor check.
+        local hull = surface.find_tiles_filtered({
+            name = "space-platform-foundation",
+            area = {{position.x - 10, position.y - 10}, {position.x + 10, position.y + 10}},
+            limit = 1,
+        })
+        if #hull == 0 and
+            surface.can_place_entity({name = "used-rocket-asteroid", position = position}) then
+            -- Explicit positive Y movement is essential for stationary platforms.
+            local wreck = surface.create_entity({
+                name = "used-rocket-asteroid",
+                position = position,
+                velocity = {x = 0, y = 0.035},
+            })
+            if wreck then return true end
         end
     end
     return false
@@ -133,9 +160,25 @@ events:on_event(defines.events.on_rocket_launched, function(event)
     end
 
     local candidates, priority = eligible_platforms(planet, force)
-    local pool = #priority > 0 and priority or candidates
+    local max_wrecks = Settings.value("razi-rocket-reusability-max-active-wrecks", 3, "runtime-global")
+    local function below_limit(platform)
+        return platform.surface.count_entities_filtered({
+            name = "used-rocket-asteroid",
+            limit = max_wrecks,
+        }) < max_wrecks
+    end
+    local preferred, fallback = {}, {}
+    for _, platform in ipairs(priority) do
+        if below_limit(platform) then preferred[#preferred + 1] = platform end
+    end
+    if #preferred == 0 then
+        for _, platform in ipairs(candidates) do
+            if below_limit(platform) then fallback[#fallback + 1] = platform end
+        end
+    end
+    local pool = #preferred > 0 and preferred or fallback
     if #pool == 0 then
-        debug_log("No built platform in orbit of " .. planet.name)
+        debug_log("No available platform in orbit of " .. planet.name .. " (all busy or none built)")
         return
     end
     local target = pool[math.random(#pool)]
