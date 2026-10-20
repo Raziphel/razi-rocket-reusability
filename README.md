@@ -1,127 +1,69 @@
 # Razi Rocket Reusability
 
-**A maintained Factorio 2.1 + Space Age continuation of Rocket Reusability.**
+**Recover the rockets you launch. Reclaim their wreckage. Put the materials back to work.**
 
-Original mod by **redplasticstraw** ([minstrel1](https://github.com/minstrel1/rocket-reusability)). Independent continuation maintained by **Raziphel**. Licensed under MIT. This is not the original Mod Portal listing.
+![Original Rocket Reusability artwork](thumbnail.png)
 
-## Gameplay
+Razi Rocket Reusability is a small **Factorio 2.1 / Space Age** mod that turns spent rockets into salvageable orbital debris. It is an independently maintained continuation of [Rocket Reusability](https://mods.factorio.com/mod/rocket-reusability) by **redplasticstraw**.
 
-After researching **Rocket Chunk Processing**, launching rockets can generate spent wrecks on a built platform orbiting the launch planet. Destroy wrecks to recover chunks, then crush those chunks for reusable components. A powered **Remnant Beacon** makes its platform the preferred destination.
+## How it works
 
-Optional incomplete rocket parts prevent free material loops and keep recycling balanced.
+1. Research **Rocket Chunk Processing** and build a space platform in orbit around a planet.
+2. Launch rockets from that planet. Eligible launches can send a **used rocket wreck** toward a platform in orbit.
+3. Defend the platform, break apart the wreck, collect its chunks, and **crush them into reusable rocket components**.
+4. Research and power a **Remnant Beacon** to prioritize that platform for incoming wrecks.
 
-## Compatibility
+Beacons **choose a destination**. They do **not** increase the number or chance of wrecks.
 
-- Factorio 2.1, Space Age and **RAZI Library (razi_lib) >= 1.2.0** required.
-- Internal mod ID: `razi-rocket-reusability`.
-- Cannot be enabled alongside `rocket-reusability`. Disable the original before switching.
-- Existing technology/item/recipe/entity names remain unchanged, but migrating existing saves is **not yet tested in-game**. Back up saves first.
-- Remote interface: `razi-rocket-reusability`, with `add_whitelist`, `remove_whitelist` and `is_whitelisted`.
+## Features
+
+- **Orbital rocket salvage:** Wrecks can approach moving or stationary space platforms.
+- **Recycling:** Process recovered rocket chunks into useful materials; optionally craft and recover incomplete rocket parts.
+- **Recovery control:** Configure the recovery chance, approach distance, and maximum intact wrecks per platform.
+- **Optional side approaches:** Let wrecks arrive from either side of a platform for an extra challenge. **Off by default**, with an adjustable 0–100% side-arrival chance.
+- **Beacon priority:** Powered Remnant Beacons designate preferred recovery platforms.
+- **Modded platform support:** Includes compatibility handling for additional space locations and platform types.
+
+## Requirements and compatibility
+
+| Mod | Requirement | Notes |
+| --- | --- | --- |
+| **Factorio 2.1 + Space Age** | Required | Rocket and space platform gameplay |
+| [**RAZI Library**](https://mods.factorio.com/mod/razi_lib) **1.2.0+** | Required | Shared settings, recipe, and runtime infrastructure |
+| **Krastorio 2 Spaced Out** | Optional | Adds Krastorio crushing support and cost-aware salvage balancing |
+| **Muluna** | Optional | Preserves modified rocket-part inputs and productivity effects |
+| **Razi Protocol** | Not required | This mod works on its own |
+
+This mod **cannot be enabled alongside the original** `rocket-reusability`. Save migration from that mod has not been verified in-game, so back up existing saves before switching. K2SO and Muluna support have automated offline checks, but still need full in-game verification.
 
 ## Settings
 
-Legacy keys remain: `enable-incomplete-rocket-parts`, `enable-incomplete-rocket-parts-productivity`, and `debug-mode`.
+All settings are available in Factorio's mod settings.
 
-New runtime-global settings:
-- `razi-rocket-reusability-recovery-chance`: 1.0 default, range 0-1.
-- `razi-rocket-reusability-spawn-distance`: 64 tiles, range 32-200; adjusted forward of long hulls.
-- `razi-rocket-reusability-allow-modded-platforms`: enabled.
-- `razi-rocket-reusability-max-active-wrecks`: 3, adjustable 1-12.
-- `razi-rocket-reusability-side-arrivals`: false (OFF, harder when enabled).
-- `razi-rocket-reusability-side-arrival-chance`: 35%, adjustable 0-100% when enabled.
+| Setting | Default | Purpose |
+| --- | --- | --- |
+| Incomplete rocket parts | On | Use recoverable components in rocket construction |
+| Incomplete rocket parts productivity | Off | Allow productivity for those parts; may affect balance |
+| Rocket recovery chance | 100% | Chance of a wreck on an eligible launch |
+| Wreck spawn distance | 64 tiles | Minimum approach distance; accounts for long hulls |
+| Allow modded platforms | On | Include constructed platforms from other mods |
+| Maximum active wrecks | 3 | Limit intact wrecks per platform |
+| Side-arriving wrecks | **Off** | Allow left/right approaches for an extra challenge |
+| Side-arrival chance | 35% | Chance of a side approach when enabled, 0–100% |
+| Debug logging | Off | Write diagnostics to the Factorio log |
 
-Use `/razi-rocket-reset-whitelist [force]` to clear custom starter packs.
+If a side approach is unsafe, the mod tries the opposite side and then falls back to a front arrival. A rocket launch never generates extra wrecks just because side mode or multiple beacons are enabled.
 
-## RAZI Library integration
+## Documentation
 
-This is a required dependency. RAZI Library supplies settings prototypes and safe
-settings reads, item/entity cloning, 2.1 recipe normalization, recipe/tech edits,
-prototype validation, a runtime event registry, namespaced storage and remote APIs.
+- **[Mod Portal description](MOD_PORTAL.md)**: ready-to-use listing copy
+- **[K2SO compatibility](docs/K2SO_COMPATIBILITY.md)**: integration details and caveats
+- **[Testing checklist](docs/TESTING.md)**: manual acceptance tests
+- **[Development](docs/DEVELOPMENT.md)**: local validation, packaging and API
+- **[Publishing](docs/RELEASING.md)**: release checklist
 
-Existing recipe, research, item and setting names remain stable. On upgrade,
-previously saved per-force platform starter-pack whitelists are migrated into
-RAZI-managed storage. This mod does not require Razi Protocol.
+## Credits and license
 
-## K2 Spaced Out compatibility (1.1.3)
+Original **Rocket Reusability** concept, source code, and artwork by **redplasticstraw** ([minstrel1 on GitHub](https://github.com/minstrel1/rocket-reusability)). This independent continuation is maintained by **Raziphel** and preserves the original art direction and attribution.
 
-K2SO (internal ID `Krastorio2-spaced-out`, version >= 2.0.0) is an optional
-dependency. You do not need K2SO or Razi Protocol to use the standalone mod.
-
-- Salvage can run in either Space Age `crushing` or Krastorio `kr-crushing`
-  machines, including K2SO's expanded Crusher.
-- Recovered materials scale with the number of rocket-part crafts required by
-  the rocket silo. A 50-part rocket recovers 3-10 components per chunk; a
-  12-part rocket recovers 1-2.
-- K2SO's space-science technology progression remains intact, with no
-  artificial advanced-tech-card gate or research shortcut.
-- Modified rocket costs, crafting conditions and productivity are retained.
-  If incomplete rocket parts cannot be crafted under an overhaul, salvage
-  falls back to usable processors and low-density structures.
-- Muluna and K2SO can both be enabled.
-
-See `K2SO_COMPATIBILITY.md` and `TEST_PLAN.md` for verification details.
-
-## Optional side-arriving wrecks (1.1.5)
-
-Enable **Side-arriving rocket wrecks (Harder)** in mod settings to allow used
-rockets to approach from the left or right of a space platform, instead of
-always coming from the front. This option is **OFF by default**.
-
-- Side arrival probability defaults to **35%** of eligible recoveries and can
-  be adjusted from 0% to 100% without restarting the game.
-- Wrecks are placed beyond observed platform foundations, checked for
-  collisions, and travel diagonally toward the hub. They approach faster
-  than ordinary front wrecks and can bypass front-only defenses.
-- A blocked/unsafe side is retried from the other side; if neither is safe,
-  the normal front approach is used rather than losing that salvage.
-- Rocket recovery probability, Remnant Beacon priority, and the existing
-  **active-wreck cap** remain in force. Side mode never creates extra wrecks.
-- **Extra challenge:** Allow rocket wrecks to approach from the sides of
-  your space platform.
-
-## Historical report fixes (1.1.2)
-
-- Wrecks approach stationary platforms with explicit velocity.
-- Hull-aware positions avoid spawning inside long ships.
-- Collision damage is less extreme while wrecks remain worthwhile salvage.
-- Wreck and chunk lighting is dimmer and less reflective (visual testing pending).
-- Fully powered Remnant Beacons prioritize platforms, not spawn rate.
-- The default limit of three simultaneous wrecks per platform prevents backlogs.
-- Muluna rocket-part costs and productivity effects are preserved: only matched
-  processing-unit + low-density-structure pairs are converted.
-- Muluna is an optional load-order dependency, not a required mod.
-
-## Original graphics preservation (1.1.4)
-
-A very light color and contrast pass was applied to the **existing** thumbnail,
-icons and the small rocket-chunk color texture. The original
-rocket, arrows, beacon composition and every sprite silhouette are preserved.
-Large rocket/beacon sprites, transparency, dimensions, normal/roughness maps and shadows
-are unchanged. No newly
-generated or replacement artwork is used. The Rocket Chunk Processing research
-icon metadata now matches the actual original 190x190 PNG, avoiding an invalid
-256x256 sprite read. Maintainers can reproduce the tiny adjustments via
-`scripts/polish_original_graphics.js` and verify with
-`scripts/validate_graphics.js` (install `pngjs` in `.tools` first).
-
-## Development and release
-
-```bash
-python3 scripts/validate.py
-python3 scripts/package.py
-
-# Optional local smoke tests against a checkout of published RAZI Library 1.2.0:
-npm install --prefix .tools --no-save fengari luaparse
-node scripts/test_razilib_integration.js /path/to/RaziLib
-node scripts/test_report_regressions.js /path/to/RaziLib
-node scripts/test_k2so_compatibility.js /path/to/RaziLib
-node scripts/test_side_arrivals.js /path/to/RaziLib
-```
-
-Output: `dist/razi-rocket-reusability_1.1.5.zip`.
-
-**Not yet runtime verified**. Test with the 2.1 executable and Space Age, including multiple planets, platforms, beacons, modded starter packs, and old saves. See `PORTAL.md` for publishing guidance.
-
-## Credits
-
-Forked from [minstrel1/rocket-reusability](https://github.com/minstrel1/rocket-reusability), originally by **redplasticstraw**. Original graphics and source remain MIT licensed. The published original v1.0.7 contained spawn fixes missing from public GitHub; analogous fixes have been reconstructed here.
+Licensed under [MIT](LICENSE). This is **not** the original Mod Portal listing.

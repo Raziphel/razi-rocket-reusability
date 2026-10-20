@@ -1,19 +1,55 @@
 #!/usr/bin/env python3
-"""Generate the correctly named Factorio mod ZIP without developer files."""
+"""Package only playable Factorio mod files. Developer files never enter the ZIP."""
+
 import json
 import zipfile
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
-info = json.loads((root / "info.json").read_text())
-name = f"{info['name']}_{info['version']}"
+manifest = json.loads((root / "info.json").read_text())
+mod_folder = f"{manifest['name']}_{manifest['version']}"
 dist = root / "dist"
 dist.mkdir(exist_ok=True)
-archive = dist / (name + ".zip")
-excluded = {".git", "dist", "scripts", ".tools", ".gitignore", "PORTAL.md", "TEST_PLAN.md", "K2SO_COMPATIBILITY.md", "__pycache__", ".DS_Store"}
+archive = dist / (mod_folder + ".zip")
+
+# Explicit allowlist instead of maintaining an ever-growing exclude list.
+root_files = (
+    "info.json",
+    "LICENSE",
+    "README.md",
+    "changelog.txt",
+    "thumbnail.png",
+    "settings.lua",
+    "data.lua",
+    "data-final-fixes.lua",
+    "control.lua",
+)
+asset_directories = ("graphics", "locale", "prototypes", "compatibility", "runtime")
+
+included = []
+for file_name in root_files:
+    file = root / file_name
+    if not file.is_file():
+        raise FileNotFoundError(f"Required mod file missing: {file_name}")
+    included.append(file)
+
+for directory in asset_directories:
+    asset_root = root / directory
+    if not asset_root.is_dir():
+        raise FileNotFoundError(f"Required mod directory missing: {directory}")
+    for file in sorted(asset_root.rglob("*")):
+        if file.is_file() and not file.name.startswith("."):
+            if ".razi-backup-" in file.name or "__pycache__" in file.parts:
+                continue
+            included.append(file)
+
 with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as z:
-    for path in sorted(root.rglob("*")):
-        if not path.is_file() or path.suffix == ".zip" or any(part in excluded or ".razi-backup-" in part for part in path.parts):
-            continue
-        z.write(path, str(Path(name) / path.relative_to(root)))
+    for file in sorted(included, key=lambda p: p.relative_to(root).as_posix()):
+        z.write(file, str(Path(mod_folder) / file.relative_to(root)))
+
+# Verify the generated archive can be opened, not just written.
+with zipfile.ZipFile(archive) as z:
+    if z.testzip() is not None:
+        raise RuntimeError("Generated mod ZIP failed integrity check")
+
 print(archive)

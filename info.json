@@ -12,5 +12,5 @@
     "? planet-muluna",
     "! rocket-reusability"
   ],
-  "description": "Recover rocket wrecks with Space Age and RAZI Library. Supports K2 Spaced Out and Muluna salvage economics."
+  "description": "Recover spent rockets as orbital wreckage, recycle their materials, and guide salvage with Remnant Beacons. Optional harder side approaches and K2 Spaced Out/Muluna compatibility. Requires Space Age and RAZI Library."
 }
