@@ -76,8 +76,8 @@ always coming from the front. This option is **OFF by default**.
   the normal front approach is used rather than losing that salvage.
 - Rocket recovery probability, Remnant Beacon priority, and the existing
   **active-wreck cap** remain in force. Side mode never creates extra wrecks.
-- **Warning:** side attacks are harder. Add side-facing turrets and asteroid
-  collection capacity, especially around large or irregular platforms.
+- **Extra challenge:** Allow rocket wrecks to approach from the sides of
+  your space platform.
 
 ## Historical report fixes (1.1.2)
 

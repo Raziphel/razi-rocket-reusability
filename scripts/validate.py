@@ -44,6 +44,6 @@ for name, modules in required.items():
 assert 'require("compatibility/k2so").apply()' in (root / "data-final-fixes.lua").read_text()
 assert 'require("runtime/side-arrivals")' in (root / "control.lua").read_text()
 assert '"razi-rocket-reusability-side-arrivals", "runtime-global", false' in (root / "settings.lua").read_text()
-assert "WARNING: Makes recovery harder" in (root / "locale/en/english.cfg").read_text()
+assert "adding an extra challenge!" in (root / "locale/en/english.cfg").read_text()
 assert "storage.platform_type_whitelist = nil" in (root / "control.lua").read_text()
 print(f"PASS: manifest, RAZI modules, probability, referenced assets, locale, {len(lua_files)} Lua files")

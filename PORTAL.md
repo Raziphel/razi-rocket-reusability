@@ -15,7 +15,7 @@ What happens to all those rockets after launch? Razi Rocket Reusability brings s
 - **Recycle your materials:** Break wrecks into chunks and crush them into components for new rocket parts.
 - **Guide recoveries:** Powered Remnant Beacons prioritize selected platforms.
 - **Balance to taste:** Adjust recovery chance and spawn distance. Optional incomplete rocket parts help avoid material duplication.
-- **Optional harder side approaches:** Enable wrecks approaching from the left or right of platforms (OFF by default), with adjustable 0-100% side-arrival chance. Warning: add side-facing defenses!
+- **Optional harder side approaches:** Enable wrecks approaching from the left or right of platforms (OFF by default), with adjustable 0-100% side-arrival chance. This adds an extra challenge!
 - **Space Age friendly:** Supports built platforms and other modded space locations.
 - **RAZI Library integration:** Shares reliable settings, recipes, prototype validation and runtime helpers. Does not require Razi Protocol.
 
