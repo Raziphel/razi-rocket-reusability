@@ -7,9 +7,10 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 info = json.loads((root / "info.json").read_text())
 assert info["factorio_version"] == "2.1"
-assert info["version"] == "1.1.2"
+assert info["version"] == "1.1.3"
 assert "razi_lib >= 1.2.0" in info["dependencies"]
 assert "? planet-muluna" in info["dependencies"]
+assert "? Krastorio2-spaced-out >= 2.0.0" in info["dependencies"]
 assert info["name"] == "razi-rocket-reusability"
 assert "! rocket-reusability" in info["dependencies"]
 assert any(d.startswith("space-age") for d in info["dependencies"])
@@ -31,6 +32,7 @@ required = {
     "settings.lua": ["lib/settings"],
     "data.lua": ["lib/item", "lib/recipe", "lib/settings"],
     "data-final-fixes.lua": ["lib/recipe", "lib/technology", "lib/validation"],
+    "compatibility/k2so.lua": ["lib/recipe", "lib/validation"],
     "prototypes/remnant-beacon.lua": ["lib/item", "lib/entity", "lib/recipe"],
     "control.lua": ["runtime/events", "runtime/storage", "runtime/remote", "lib/settings"],
 }
@@ -38,5 +40,6 @@ for name, modules in required.items():
     text = (root / name).read_text()
     for module in modules:
         assert f'require("__razi_lib__/{module}")' in text, f"{name} missing RAZI Library {module}"
+assert 'require("compatibility/k2so").apply()' in (root / "data-final-fixes.lua").read_text()
 assert "storage.platform_type_whitelist = nil" in (root / "control.lua").read_text()
 print(f"PASS: manifest, RAZI modules, probability, referenced assets, locale, {len(lua_files)} Lua files")

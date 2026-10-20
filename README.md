@@ -26,6 +26,7 @@ New runtime-global settings:
 - `razi-rocket-reusability-recovery-chance`: 1.0 default, range 0-1.
 - `razi-rocket-reusability-spawn-distance`: 64 tiles, range 32-200; adjusted forward of long hulls.
 - `razi-rocket-reusability-allow-modded-platforms`: enabled.
+- `razi-rocket-reusability-max-active-wrecks`: 3, adjustable 1-12.
 
 Use `/razi-rocket-reset-whitelist [force]` to clear custom starter packs.
 
@@ -38,6 +39,25 @@ prototype validation, a runtime event registry, namespaced storage and remote AP
 Existing recipe, research, item and setting names remain stable. On upgrade,
 previously saved per-force platform starter-pack whitelists are migrated into
 RAZI-managed storage. This mod does not require Razi Protocol.
+
+## K2 Spaced Out compatibility (1.1.3)
+
+K2SO (internal ID `Krastorio2-spaced-out`, version >= 2.0.0) is an optional
+dependency. You do not need K2SO or Razi Protocol to use the standalone mod.
+
+- Salvage can run in either Space Age `crushing` or Krastorio `kr-crushing`
+  machines, including K2SO's expanded Crusher.
+- Recovered materials scale with the number of rocket-part crafts required by
+  the rocket silo. A 50-part rocket recovers 3-10 components per chunk; a
+  12-part rocket recovers 1-2.
+- K2SO's space-science technology progression remains intact, with no
+  artificial advanced-tech-card gate or research shortcut.
+- Modified rocket costs, crafting conditions and productivity are retained.
+  If incomplete rocket parts cannot be crafted under an overhaul, salvage
+  falls back to usable processors and low-density structures.
+- Muluna and K2SO can both be enabled.
+
+See `K2SO_COMPATIBILITY.md` and `TEST_PLAN.md` for verification details.
 
 ## Historical report fixes (1.1.2)
 
@@ -61,9 +81,10 @@ python3 scripts/package.py
 npm install --prefix .tools --no-save fengari luaparse
 node scripts/test_razilib_integration.js /path/to/RaziLib
 node scripts/test_report_regressions.js /path/to/RaziLib
+node scripts/test_k2so_compatibility.js /path/to/RaziLib
 ```
 
-Output: `dist/razi-rocket-reusability_1.1.2.zip`.
+Output: `dist/razi-rocket-reusability_1.1.3.zip`.
 
 **Not yet runtime verified**. Test with the 2.1 executable and Space Age, including multiple planets, platforms, beacons, modded starter packs, and old saves. See `PORTAL.md` for publishing guidance.
 

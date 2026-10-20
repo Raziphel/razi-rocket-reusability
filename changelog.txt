@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+Date: 20. 10. 2026
+  Compatibility:
+    - Explicit optional dependency and post-K2SO data-stage integration.
+    - Adds Krastorio crushing machine category to salvage processing.
+    - Balances recoverable components to installed rocket silo craft requirements.
+    - Preserves K2SO tech-card prerequisites and rocket-part productivity.
+    - Uses craftable salvage fallback for overhaul rocket recipes without PU/LDS.
+  Tests:
+    - Adds standalone/K2SO data-stage compatibility checks for several rocket costs.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.2
 Date: 20. 10. 2026
   Fixes:

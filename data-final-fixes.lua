@@ -58,15 +58,31 @@ if incomplete then
         Validation.prototype("item", "incomplete-rocket-part")
         Validation.ingredient("rocket-part", "incomplete-rocket-part")
         Validation.unlock("rocket-silo", "incomplete-rocket-part")
+    else
+        -- Overhauls that remove processors or LDS from rocket parts must not
+        -- leave salvage producing an item with no unlocked crafting route.
+        Recipe.get("rocket-chunk-processing"):set_results({
+            {type="item", name="processing-unit", amount_min=3, amount_max=10},
+            {type="item", name="low-density-structure", amount_min=3, amount_max=10},
+            {type="item", name="rocket-chunk", amount=1, independent_probability=0.1},
+        })
     end
 end
+
+-- Explicit K2SO compatibility runs after other mods' data-final-fixes.
+require("compatibility/k2so").apply()
 
 Validation.prototype("asteroid", "used-rocket-asteroid")
 Validation.prototype("asteroid-chunk", "rocket-chunk")
 Validation.prototype("radar", "remnant-beacon")
 Validation.prototype("item", "remnant-beacon")
 Validation.ingredient("rocket-chunk-processing", "rocket-chunk")
-Validation.result("rocket-chunk-processing", incomplete and "incomplete-rocket-part" or "processing-unit")
+local salvage_outputs = data.raw.recipe["rocket-chunk-processing"].results
+local returns_incomplete = false
+for _, result in pairs(salvage_outputs) do
+    if result.name == "incomplete-rocket-part" then returns_incomplete = true end
+end
+Validation.result("rocket-chunk-processing", returns_incomplete and "incomplete-rocket-part" or "processing-unit")
 Validation.unlock("rocket-chunk-processing", "rocket-chunk-processing")
 Validation.unlock("remnant-beacon", "remnant-beacon")
 Validation.prerequisite("remnant-beacon", "rocket-chunk-processing")

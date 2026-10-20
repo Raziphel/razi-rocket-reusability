@@ -18,7 +18,16 @@ What happens to all those rockets after launch? Razi Rocket Reusability brings s
 - **Space Age friendly:** Supports built platforms and other modded space locations.
 - **RAZI Library integration:** Shares reliable settings, recipes, prototype validation and runtime helpers. Does not require Razi Protocol.
 
-### Improvements since the original\n\nWrecks now approach stationary platforms, avoid forward hulls and cause less impact damage. Rocket and chunk lighting has been softened. Rocket-part conversions preserve Muluna's ingredient ratios and productivity research.\n\n### Compatibility
+### Improvements since the original
+
+Wrecks now approach stationary platforms, avoid forward hulls and cause less impact damage. Rocket and chunk lighting has been softened. Rocket-part conversions preserve Muluna's ingredient ratios and productivity research.
+
+
+### K2 Spaced Out compatibility
+
+Optional, explicitly supported Krastorio 2 Spaced Out 2.0.x integration: enables salvage in Krastorio crushers, preserves rocket productivity and science progression, and balances yields against the rocket silo's configured launch cost. No requirement for Razi Protocol.
+
+### Compatibility
 
 Requires Factorio **2.1**, **Space Age**, and **[RAZI Library](https://mods.factorio.com/mod/razi_lib) 1.2.0+**. Do not enable alongside the original Rocket Reusability mod. Save backups are recommended when switching between mods, pending migration testing.
 
@@ -28,7 +37,7 @@ Independent continuation maintained by **Raziphel**, based on **Rocket Reusabili
 
 ## Before publishing
 
-1. Verify the upload ZIP is named `razi-rocket-reusability_1.1.2.zip` and contains the same-name top-level directory.
+1. Verify the upload ZIP is named `razi-rocket-reusability_1.1.3.zip` and contains the same-name top-level directory.
 2. Run the offline validator and perform an actual Factorio 2.1 + Space Age game-load test.
 3. Check actual gameplay: launched rockets, orbiting platforms, recovery, beacons, recycling, and existing saves.
 4. Set the new Mod Portal slug to `razi-rocket-reusability`, confirm the owner and MIT licence, and link the repository.

@@ -1,4 +1,4 @@
-# Manual acceptance tests: Factorio 2.1 / Razi Rocket Reusability 1.1.2
+# Manual acceptance tests: Factorio 2.1 / Razi Rocket Reusability 1.1.3
 
 Offline smoke tests in the repository are useful, but do **not** replace in-game testing. Use RAZI Library 1.2.0 or newer and Space Age. The original Rocket Reusability must be disabled.
 
@@ -27,6 +27,16 @@ Offline smoke tests in the repository are useful, but do **not** replace in-game
 14. Load a save from Razi Rocket Reusability 1.1.1; verify whitelisted starter packs are retained and mod-provided items, beacons and technology survive.
 15. Load a save from the original Rocket Reusability **only after backing up the save**, with the original mod disabled. Test migration manually: identical prototype names help but do not guarantee a clean Factorio mod-name transition.
 
+## Krastorio 2 Spaced Out acceptance
+
+16. Start Factorio 2.1 with current Krastorio 2 + K2SO, RaziLib, Space Age and this mod. Confirm no dependency or prototype errors.
+17. Research Rocket Chunk Processing in K2SO. Verify science-card progression has no skipped or impossible requirements.
+18. Check rocket chunk crushing in the Space Age Crusher and the Krastorio crushing machine category.
+19. Compare rocket-part costs and research productivity before and after enabling the mod. Existing K2SO modifiers must remain unchanged.
+20. Test a standard rocket silo and a modified cheaper rocket silo. Confirm component yields match the declared silo craft requirement.
+21. Repeat with Muluna + K2SO together, both incomplete-parts setting choices, and modded platforms.
+22. Verify disabling K2SO leaves vanilla Space Age salvage functional.
+
 ## Developer commands
 
 Run these in the repository's checkout:
@@ -35,6 +45,7 @@ Run these in the repository's checkout:
     npm install --prefix .tools --no-save fengari luaparse
     node scripts/test_razilib_integration.js /path/to/RaziLib
     node scripts/test_report_regressions.js /path/to/RaziLib
+    node scripts/test_k2so_compatibility.js /path/to/RaziLib
     python3 scripts/package.py
 
 The generated ZIP is a **development build**, not a verified release, until in-game acceptance testing has been completed.
