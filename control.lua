@@ -1,14 +1,20 @@
 -- Factorio 2.1 maintenance of redplasticstraw's Rocket Reusability.
 -- Existing prototype names and interface are preserved for save compatibility.
+local Events = require("__razi_lib__/runtime/events")
+local Storage = require("__razi_lib__/runtime/storage")
+local Remote = require("__razi_lib__/runtime/remote")
+local Settings = require("__razi_lib__/lib/settings")
+
+local state = Storage.namespace("razi_rocket_reusability", { platform_type_whitelist = {} })
+local events = Events.new()
 local DEFAULT_PACK = "space-platform-starter-pack"
 
 local function debug_log(message)
-    if settings.global["debug-mode"].value then log("[razi-rocket-reusability] " .. message) end
+    if Settings.enabled("debug-mode", false, "runtime-global") then log("[razi-rocket-reusability] " .. message) end
 end
 
 local function whitelist_for(force)
-    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
-    local all = storage.platform_type_whitelist
+    local all = state:get("platform_type_whitelist", {})
     all[force] = all[force] or {}
     return all[force]
 end
@@ -17,23 +23,33 @@ local function is_whitelisted(pack, force)
     return pack == DEFAULT_PACK or whitelist_for(force or "player")[pack] == true
 end
 
-script.on_init(function()
-    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
-end)
-
-script.on_configuration_changed(function()
-    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
-    for _, allowed in pairs(storage.platform_type_whitelist) do
-        for _, pack in ipairs(allowed) do
-            if type(pack) == "string" then allowed[pack] = true end
-        end
-        for key in pairs(allowed) do
-            if type(key) == "number" then allowed[key] = nil end
+local function prepare_state()
+    state:ensure()
+    -- Upgrade earlier saves storing per-force whitelists at the storage root.
+    local legacy = storage.platform_type_whitelist
+    if type(legacy) ~= "table" then return end
+    local all = state:get("platform_type_whitelist", {})
+    for force, allowed in pairs(legacy) do
+        if type(allowed) == "table" then
+            all[force] = all[force] or {}
+            for _, pack in ipairs(allowed) do
+                if type(pack) == "string" then all[force][pack] = true end
+            end
+            for pack, enabled in pairs(allowed) do
+                if type(pack) == "string" and enabled == true then
+                    all[force][pack] = true
+                end
+            end
         end
     end
-end)
+    state:set("platform_type_whitelist", all)
+    -- Clear only after successful migration; removed packs must stay removed.
+    storage.platform_type_whitelist = nil
+end
 
-remote.add_interface("razi-rocket-reusability", {
+events:on_init(prepare_state):on_configuration_changed(prepare_state)
+
+Remote.add_interface("razi-rocket-reusability", {
     add_whitelist = function(pack, force)
         if type(pack) ~= "string" then return false end
         whitelist_for(force or "player")[pack] = true
@@ -51,8 +67,8 @@ remote.add_interface("razi-rocket-reusability", {
 
 commands.add_command("razi-rocket-reset-whitelist", "Clear custom starter packs for a force (default: player).", function(cmd)
     local force = cmd.parameter and cmd.parameter ~= "" and cmd.parameter or "player"
-    storage.platform_type_whitelist = storage.platform_type_whitelist or {}
-    storage.platform_type_whitelist[force] = {}
+    whitelist_for(force)
+    state:get("platform_type_whitelist")[force] = {}
     debug_log("Reset platform whitelist for " .. force)
 end)
 
@@ -61,7 +77,7 @@ local function eligible_platforms(planet, force)
     -- Factorio 2.1 returns built platforms at a given planet.
     for _, platform in pairs(planet.get_space_platforms(force)) do
         local pack = platform.starter_pack
-        local allow_all = settings.global["razi-rocket-reusability-allow-modded-platforms"].value
+        local allow_all = Settings.enabled("razi-rocket-reusability-allow-modded-platforms", true, "runtime-global")
         if (allow_all or not pack or is_whitelisted(pack.name, force.name))
             and platform.hub and platform.hub.valid then
             local surface = platform.surface
@@ -82,7 +98,7 @@ end
 
 local function spawn_wreck(platform)
     local surface = platform.surface
-    local distance = settings.global["razi-rocket-reusability-spawn-distance"].value
+    local distance = Settings.value("razi-rocket-reusability-spawn-distance", 96, "runtime-global")
     -- Restore the published 1.0.7 collision-checking behaviour, absent from GitHub.
     for _ = 1, 12 do
         local position = {x = math.random(-80, 80), y = -distance - math.random(0, 40)}
@@ -95,14 +111,14 @@ local function spawn_wreck(platform)
     return false
 end
 
-script.on_event(defines.events.on_rocket_launched, function(event)
+events:on_event(defines.events.on_rocket_launched, function(event)
     local silo = event.rocket_silo
     if not silo or not silo.valid then return end
     local force = silo.force
     if not force.is_space_platforms_unlocked() then return end
     local research = force.technologies["rocket-chunk-processing"]
     if not research or not research.researched then return end
-    if math.random() > settings.global["razi-rocket-reusability-recovery-chance"].value then return end
+    if math.random() > Settings.value("razi-rocket-reusability-recovery-chance", 1, "runtime-global") then return end
 
     local planet
     for _, candidate in pairs(game.planets) do
@@ -129,3 +145,5 @@ script.on_event(defines.events.on_rocket_launched, function(event)
         debug_log("No safe wreck position near " .. target.name)
     end
 end)
+
+events:install()

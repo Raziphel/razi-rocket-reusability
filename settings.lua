@@ -1,48 +1,11 @@
+-- RAZI Library builds and validates our setting prototypes.
+local Settings = require("__razi_lib__/lib/settings")
+
 data:extend({
-    {
-        type = "bool-setting",
-        name = "enable-incomplete-rocket-parts",
-        setting_type = "startup",
-        default_value = true,
-        order = "a"
-    },
-    {
-        type = "bool-setting",
-        name = "enable-incomplete-rocket-parts-productivity",
-        setting_type = "startup",
-        default_value = false,
-        order = "b"
-    },
-    {
-        type = "double-setting",
-        name = "razi-rocket-reusability-recovery-chance",
-        setting_type = "runtime-global",
-        default_value = 1.0,
-        minimum_value = 0,
-        maximum_value = 1,
-        order = "c"
-    },
-    {
-        type = "int-setting",
-        name = "razi-rocket-reusability-spawn-distance",
-        setting_type = "runtime-global",
-        default_value = 96,
-        minimum_value = 64,
-        maximum_value = 200,
-        order = "d"
-    },
-    {
-        type = "bool-setting",
-        name = "razi-rocket-reusability-allow-modded-platforms",
-        setting_type = "runtime-global",
-        default_value = true,
-        order = "e"
-    },
-    {
-        type = "bool-setting",
-        name = "debug-mode",
-        setting_type = "runtime-global",
-        default_value = false,
-        order = "z"
-    }
+    Settings.bool("enable-incomplete-rocket-parts", "startup", true, "a"),
+    Settings.bool("enable-incomplete-rocket-parts-productivity", "startup", false, "b"),
+    Settings.double("razi-rocket-reusability-recovery-chance", "runtime-global", 1.0, 0, 1, "c"),
+    Settings.int("razi-rocket-reusability-spawn-distance", "runtime-global", 96, 64, 200, "d"),
+    Settings.bool("razi-rocket-reusability-allow-modded-platforms", "runtime-global", true, "e"),
+    Settings.bool("debug-mode", "runtime-global", false, "z"),
 })

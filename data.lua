@@ -1,3 +1,6 @@
+local RaziSettings = require("__razi_lib__/lib/settings")
+local RaziItem = require("__razi_lib__/lib/item")
+local RaziRecipe = require("__razi_lib__/lib/recipe")
 require("prototypes/remnant-beacon")
 
 local space_age_sounds = require("__space-age__.prototypes.entity.sounds")
@@ -274,17 +277,13 @@ data:extend
     }
 }
 
-local add_incomplete = settings.startup["enable-incomplete-rocket-parts"].value
+local add_incomplete = RaziSettings.enabled("enable-incomplete-rocket-parts", true)
 
 if add_incomplete then
-    local incomplete_rocket_part = table.deepcopy(data.raw.item["rocket-part"])
-    incomplete_rocket_part.name = "incomplete-rocket-part"
-    incomplete_rocket_part.stack_size = 50
+    local incomplete_rocket_part = RaziItem.get("rocket-part"):clone("incomplete-rocket-part")
+        :set_stack_size(50)
+        :set_icon("__razi-rocket-reusability__/graphics/icons/incomplete-rocket-part.png", 64)
     incomplete_rocket_part.hidden = false
-
-    incomplete_rocket_part.icon = "__razi-rocket-reusability__/graphics/icons/incomplete-rocket-part.png"
-
-    data:extend { incomplete_rocket_part }
 
     local incomplete_rocket_part_recipe = {
         type = "recipe",
@@ -296,10 +295,11 @@ if add_incomplete then
             { type = "item", name = "processing-unit",       amount = 1 },
             { type = "item", name = "low-density-structure", amount = 1 }
         },
-        allow_productivity = settings.startup["enable-incomplete-rocket-parts-productivity"].value,
+        allow_productivity = RaziSettings.enabled("enable-incomplete-rocket-parts-productivity", false),
         results = { { type = "item", name = "incomplete-rocket-part", amount = 1 } },
     }
 
+    RaziRecipe.normalize_2_1(incomplete_rocket_part_recipe)
     data:extend { incomplete_rocket_part_recipe }
 end
 
@@ -363,6 +363,7 @@ local technology = {
         }
     }
 
+RaziRecipe.normalize_2_1(recipe)
 data:extend { recipe }
 data:extend { technology }
 

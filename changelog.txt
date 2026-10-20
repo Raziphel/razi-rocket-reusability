@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+Date: 20. 10. 2026
+  Integration:
+    - Requires published RAZI Library 1.2.0 or newer (razi_lib).
+    - Shared settings constructors, prototype cloning and recipe normalization.
+    - Shared recipe edits, idempotent technology unlocks and validation.
+    - RAZI event registry, remote API registration and persistent storage namespace.
+  Migration:
+    - Preserves per-force custom space platform whitelist settings across upgrades.
+    - Keeps existing technology, recipe, item and setting names.
+  Testing:
+    - Added RAZI Library 1.2.0 offline data/runtime integration smoke tests.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.0 (Razi continuation)
 Date: 20. 10. 2026
   Compatibility:

@@ -12,7 +12,7 @@ Optional incomplete rocket parts prevent free material loops and keep recycling 
 
 ## Compatibility
 
-- Factorio 2.1 + Space Age required.
+- Factorio 2.1, Space Age and **RAZI Library (razi_lib) >= 1.2.0** required.
 - Internal mod ID: `razi-rocket-reusability`.
 - Cannot be enabled alongside `rocket-reusability`. Disable the original before switching.
 - Existing technology/item/recipe/entity names remain unchanged, but migrating existing saves is **not yet tested in-game**. Back up saves first.
@@ -29,14 +29,28 @@ New runtime-global settings:
 
 Use `/razi-rocket-reset-whitelist [force]` to clear custom starter packs.
 
+## RAZI Library integration
+
+This is a required dependency. RAZI Library supplies settings prototypes and safe
+settings reads, item/entity cloning, 2.1 recipe normalization, recipe/tech edits,
+prototype validation, a runtime event registry, namespaced storage and remote APIs.
+
+Existing recipe, research, item and setting names remain stable. On upgrade,
+previously saved per-force platform starter-pack whitelists are migrated into
+RAZI-managed storage. This mod does not require Razi Protocol.
+
 ## Development and release
 
 ```bash
 python3 scripts/validate.py
 python3 scripts/package.py
+
+# Optional local smoke tests against a checkout of published RAZI Library 1.2.0:
+npm install --prefix .tools --no-save fengari luaparse
+node scripts/test_razilib_integration.js /path/to/RaziLib
 ```
 
-Output: `dist/razi-rocket-reusability_1.1.0.zip`.
+Output: `dist/razi-rocket-reusability_1.1.1.zip`.
 
 **Not yet runtime verified**. Test with the 2.1 executable and Space Age, including multiple planets, platforms, beacons, modded starter packs, and old saves. See `PORTAL.md` for publishing guidance.
 

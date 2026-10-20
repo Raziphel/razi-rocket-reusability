@@ -1,13 +1,14 @@
 {
   "name": "razi-rocket-reusability",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "title": "Razi Rocket Reusability",
   "author": "redplasticstraw (original); Raziphel (maintainer)",
   "factorio_version": "2.1",
   "dependencies": [
     "base >= 2.1.0",
     "space-age >= 2.1.0",
+    "razi_lib >= 1.2.0",
     "! rocket-reusability"
   ],
-  "description": "Recover used rockets in orbit, recycle their chunks into reusable materials, and guide wrecks with Remnant Beacons. Independent Factorio 2.1 continuation of Rocket Reusability."
+  "description": "Recover used rocket wrecks and recycle them into materials. Requires RAZI Library and Space Age. Maintained Factorio 2.1 continuation."
 }

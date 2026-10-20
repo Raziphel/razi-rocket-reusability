@@ -1,6 +1,8 @@
-local item = table.deepcopy(data.raw["item"]["radar"])
+local RaziItem = require("__razi_lib__/lib/item")
+local RaziEntity = require("__razi_lib__/lib/entity")
+local RaziRecipe = require("__razi_lib__/lib/recipe")
 
-item.name = "remnant-beacon"
+local item = RaziItem.get("radar"):clone("remnant-beacon"):raw()
 item.place_result = "remnant-beacon"
 item.order = "g"
 item.icon = "__razi-rocket-reusability__/graphics/icons/remnant-beacon.png"
@@ -8,11 +10,7 @@ item.icon_size = 64
 item.stack_size = 1
 item.weight = 1000000
 
-data:extend{item}
-
-local entity = table.deepcopy(data.raw["radar"]["radar"])
-
-entity.name = "remnant-beacon"
+local entity = RaziEntity.clone("radar", "radar", "remnant-beacon"):raw()
 entity.icon = "__razi-rocket-reusability__/graphics/icons/remnant-beacon.png"
 
 entity.minable = {mining_time = 1.0, result = "remnant-beacon"}
@@ -68,8 +66,6 @@ entity.surface_conditions = {
   }
 }
 
-data:extend{entity}
-
 local recipe = {
     type = "recipe",
     name = "remnant-beacon",
@@ -84,6 +80,7 @@ local recipe = {
     requester_paste_multiplier = 5
 }
 
+RaziRecipe.normalize_2_1(recipe)
 data:extend{recipe}
 
 local technology = {
