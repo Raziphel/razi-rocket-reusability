@@ -71,6 +71,19 @@ See `K2SO_COMPATIBILITY.md` and `TEST_PLAN.md` for verification details.
   processing-unit + low-density-structure pairs are converted.
 - Muluna is an optional load-order dependency, not a required mod.
 
+## Original graphics preservation (1.1.4)
+
+A very light color and contrast pass was applied to the **existing** thumbnail,
+icons and the small rocket-chunk color texture. The original
+rocket, arrows, beacon composition and every sprite silhouette are preserved.
+Large rocket/beacon sprites, transparency, dimensions, normal/roughness maps and shadows
+are unchanged. No newly
+generated or replacement artwork is used. The Rocket Chunk Processing research
+icon metadata now matches the actual original 190x190 PNG, avoiding an invalid
+256x256 sprite read. Maintainers can reproduce the tiny adjustments via
+`scripts/polish_original_graphics.js` and verify with
+`scripts/validate_graphics.js` (install `pngjs` in `.tools` first).
+
 ## Development and release
 
 ```bash
@@ -84,7 +97,7 @@ node scripts/test_report_regressions.js /path/to/RaziLib
 node scripts/test_k2so_compatibility.js /path/to/RaziLib
 ```
 
-Output: `dist/razi-rocket-reusability_1.1.3.zip`.
+Output: `dist/razi-rocket-reusability_1.1.4.zip`.
 
 **Not yet runtime verified**. Test with the 2.1 executable and Space Age, including multiple planets, platforms, beacons, modded starter packs, and old saves. See `PORTAL.md` for publishing guidance.
 

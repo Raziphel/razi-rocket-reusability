@@ -7,7 +7,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 info = json.loads((root / "info.json").read_text())
 assert info["factorio_version"] == "2.1"
-assert info["version"] == "1.1.3"
+assert info["version"] == "1.1.4"
 assert "razi_lib >= 1.2.0" in info["dependencies"]
 assert "? planet-muluna" in info["dependencies"]
 assert "? Krastorio2-spaced-out >= 2.0.0" in info["dependencies"]

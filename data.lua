@@ -338,7 +338,7 @@ local technology = {
         type = "technology",
         name = "rocket-chunk-processing",
         icon = "__razi-rocket-reusability__/graphics/icons/rocket-reusability-research.png",
-        icon_size = 256,
+        icon_size = 190,
         effects =
         {
             {

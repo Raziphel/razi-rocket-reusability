@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.4
+Date: 20. 10. 2026
+  Graphics:
+    - Subtle color/contrast polish on the original thumbnail, icons and small chunk sprite.
+    - All original composition, sprites, dimensions and alpha masks preserved.
+    - Normal maps, roughness maps and shadows unchanged. No replacement artwork.
+  Fixes:
+    - Corrected Rocket Chunk Processing research icon size declaration (190x190).
+  Maintenance:
+    - Added reproducible, bounded image polishing and asset regression checks.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.3
 Date: 20. 10. 2026
   Compatibility:

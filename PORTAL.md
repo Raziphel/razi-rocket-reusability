@@ -37,7 +37,7 @@ Independent continuation maintained by **Raziphel**, based on **Rocket Reusabili
 
 ## Before publishing
 
-1. Verify the upload ZIP is named `razi-rocket-reusability_1.1.3.zip` and contains the same-name top-level directory.
+1. Verify the upload ZIP is named `razi-rocket-reusability_1.1.4.zip` and contains the same-name top-level directory.
 2. Run the offline validator and perform an actual Factorio 2.1 + Space Age game-load test.
 3. Check actual gameplay: launched rockets, orbiting platforms, recovery, beacons, recycling, and existing saves.
 4. Set the new Mod Portal slug to `razi-rocket-reusability`, confirm the owner and MIT licence, and link the repository.

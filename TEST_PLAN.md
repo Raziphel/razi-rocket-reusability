@@ -1,4 +1,4 @@
-# Manual acceptance tests: Factorio 2.1 / Razi Rocket Reusability 1.1.3
+# Manual acceptance tests: Factorio 2.1 / Razi Rocket Reusability 1.1.4
 
 Offline smoke tests in the repository are useful, but do **not** replace in-game testing. Use RAZI Library 1.2.0 or newer and Space Age. The original Rocket Reusability must be disabled.
 
