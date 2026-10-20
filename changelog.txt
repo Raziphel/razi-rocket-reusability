@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.6
+Date: 21. 10. 2026
+  Integration:
+    - Razi Protocol Hard and Nightmare presets automatically activate side-arriving rocket wrecks.
+    - Easy, Normal and Custom respect the standalone runtime side-arrivals toggle.
+    - The existing side-arrival chance, cap, beacon priority and safety fallback are unchanged.
+  Compatibility:
+    - No cross-mod settings writes, save migrations or extra scripted wrecks.
+    - Runtime setting changes remain effective without reloading a save.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.5
 Date: 21. 10. 2026
   Features:

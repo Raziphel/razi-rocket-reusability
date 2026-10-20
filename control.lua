@@ -139,10 +139,21 @@ local function spawn_front_wreck(platform)
     return false
 end
 
+-- A Razi Protocol preset is a pack-wide choice, not a writable setting
+-- belonging to this mod. Factorio cannot let Protocol write this mod's
+-- runtime-global settings; read its startup preset on each launch instead.
+-- Explicit standalone/Custom side arrivals still work normally.
+local function side_arrivals_enabled()
+    local manual = Settings.enabled("razi-rocket-reusability-side-arrivals", false, "runtime-global")
+    local protocol = settings.startup["razi-difficulty-preset"]
+    local preset = protocol and protocol.value
+    return manual or preset == "hard" or preset == "nightmare"
+end
+
 -- Side approaches are an opt-in challenge. Their probability is conditional
 -- on the existing recovery roll, so they never add extra wrecks per launch.
 local function spawn_wreck(platform)
-    if Settings.enabled("razi-rocket-reusability-side-arrivals", false, "runtime-global") then
+    if side_arrivals_enabled() then
         local chance = Settings.value("razi-rocket-reusability-side-arrival-chance", 35, "runtime-global")
         if chance > 0 and math.random(100) <= chance then
             local spawned, side = SideArrivals.try_spawn(platform,

@@ -20,7 +20,7 @@ Beacons **choose a destination**. They do **not** increase the number or chance 
 - **Orbital rocket salvage:** Wrecks can approach moving or stationary space platforms.
 - **Recycling:** Process recovered rocket chunks into useful materials; optionally craft and recover incomplete rocket parts.
 - **Recovery control:** Configure the recovery chance, approach distance, and maximum intact wrecks per platform.
-- **Optional side approaches:** Let wrecks arrive from either side of a platform for an extra challenge. **Off by default**, with an adjustable 0–100% side-arrival chance.
+- **Optional side approaches:** Let wrecks arrive from either side of a platform for an extra challenge. **Off by default** in standalone, Easy and Normal campaigns, with an adjustable 0–100% side-arrival chance. **Razi Protocol Hard and Nightmare automatically enable side approaches** at the configured chance, including when the ordinary side-arrival checkbox is off; Custom honours the checkbox.
 - **Beacon priority:** Powered Remnant Beacons designate preferred recovery platforms.
 - **Modded platform support:** Includes compatibility handling for additional space locations and platform types.
 
@@ -32,7 +32,7 @@ Beacons **choose a destination**. They do **not** increase the number or chance 
 | [**RAZI Library**](https://mods.factorio.com/mod/razi_lib) **1.2.0+** | Required | Shared settings, recipe, and runtime infrastructure |
 | **Krastorio 2 Spaced Out** | Optional | Adds Krastorio crushing support and cost-aware salvage balancing |
 | **Muluna** | Optional | Preserves modified rocket-part inputs and productivity effects |
-| **Razi Protocol** | Not required | This mod works on its own |
+| **Razi Protocol** | Optional | When installed, Hard and Nightmare enable side arrivals automatically; its Expedition Journal and salvage industries offer further integration |
 
 This mod **cannot be enabled alongside the original** `rocket-reusability`. Save migration from that mod has not been verified in-game, so back up existing saves before switching. K2SO and Muluna support have automated offline checks, but still need full in-game verification.
 

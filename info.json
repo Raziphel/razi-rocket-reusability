@@ -1,6 +1,6 @@
 {
   "name": "razi-rocket-reusability",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "title": "Razi Rocket Reusability",
   "author": "redplasticstraw (original); Raziphel (maintainer)",
   "factorio_version": "2.1",
@@ -12,5 +12,5 @@
     "? planet-muluna",
     "! rocket-reusability"
   ],
-  "description": "Recover spent rockets as orbital wreckage, recycle their materials, and guide salvage with Remnant Beacons. Optional harder side approaches and K2 Spaced Out/Muluna compatibility. Requires Space Age and RAZI Library."
+  "description": "Recover spent rockets as orbital wreckage, recycle their materials, and guide salvage with Remnant Beacons. Hard/Nightmare Razi Protocol campaigns automatically enable side-arriving wrecks; standalone/Custom approaches remain configurable."
 }
