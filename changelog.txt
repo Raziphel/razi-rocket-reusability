@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.8
+Date: 21. 10. 2026
+  Native settings integration:
+    - Hard and Nightmare synchronize five real Rocket Reusability Map settings
+      owned by this mod: recovery, spawn distance, wreck cap, side mode, side chance.
+    - Previous manual selections are saved and restored on Easy/Normal/Custom
+      and when Razi Protocol is absent.
+    - Migrate side-arrival checkbox preferences recorded by the 1.1.7 bridge.
+    - Preserve separate mod compatibility/debug choices and all startup settings.
+  Testing:
+    - Expanded native settings bridge regression coverage across both modes,
+      idempotence, re-enforcement, restoration, Custom and save migration.
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Version: 1.1.7
 Date: 21. 10. 2026
   Razi Protocol integration:

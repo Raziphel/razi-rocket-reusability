@@ -1,39 +1,90 @@
--- Native Razi Protocol integration for the owner's own runtime setting.
--- This module intentionally knows only settings that belong to our mod:
--- Factorio forbids a mod from writing another mod's Mod Settings values.
+-- Source-owned native Factorio Map setting synchronization.
+-- Razi Protocol itself CANNOT assign settings owned by this mod. As the
+-- setting owner, Rocket Reusability can update its own runtime-global values.
+-- Startup settings, cosmetic controls and third-party settings are untouched.
 local M={}
-local SETTING="razi-rocket-reusability-side-arrivals"
-local KEY="protocol_side_arrivals_policy"
+local POLICY_KEY="protocol_owned_settings_policy"
+local LEGACY_KEY="protocol_side_arrivals_policy"
+local SIDE="razi-rocket-reusability-side-arrivals"
 
-function M.sync(startup, global_settings, state)
-    local own=global_settings and global_settings[SETTING]
-    if not own then return false end
-    local parent=startup and startup["razi-difficulty-preset"]
-    local selected=parent and parent.value
-    local enforce=selected=="hard" or selected=="nightmare"
-    local remembered=state:get(KEY, nil)
+-- All values are actual runtime-global setting IDs registered in settings.lua,
+-- within the exact permitted bounds for those prototypes.
+M.profiles={
+    hard={
+        ["razi-rocket-reusability-recovery-chance"]=0.90,
+        ["razi-rocket-reusability-spawn-distance"]=56,
+        ["razi-rocket-reusability-max-active-wrecks"]=4,
+        [SIDE]=true,
+        ["razi-rocket-reusability-side-arrival-chance"]=55,
+    },
+    nightmare={
+        ["razi-rocket-reusability-recovery-chance"]=0.75,
+        ["razi-rocket-reusability-spawn-distance"]=44,
+        ["razi-rocket-reusability-max-active-wrecks"]=6,
+        [SIDE]=true,
+        ["razi-rocket-reusability-side-arrival-chance"]=80,
+    },
+}
 
-    if enforce then
-        -- Snapshot the player's original choice once, so this mod can return
-        -- to their configuration when Protocol no longer forces harder wrecks.
-        if not remembered or not remembered.active then
-            state:set(KEY, {active=true, original=own.value==true})
-        end
-        if own.value~=true then
-            global_settings[SETTING]={value=true}
-            return true
-        end
-    elseif remembered and remembered.active then
-        -- Easy, Normal, Custom and standalone games never keep a stale
-        -- Hard/Nightmare-enforced value.
-        local original=remembered.original==true
-        state:set(KEY, {active=false})
-        if own.value~=original then
-            global_settings[SETTING]={value=original}
-            return true
+-- Keep a saved pre-preset preference once per setting. The old 1.1.7
+-- side-arrivals snapshot is migrated so existing saves never lose it.
+local function snapshot(state, global_settings)
+    local previous=state:get(POLICY_KEY,nil)
+    if previous and previous.active then return previous end
+    local originals={}
+    local legacy=state:get(LEGACY_KEY,nil)
+    if legacy and legacy.active then originals[SIDE]=legacy.original==true end
+    for setting in pairs(M.profiles.hard) do
+        local owned=global_settings and global_settings[setting]
+        if owned and originals[setting]==nil then
+            originals[setting]=owned.value
         end
     end
-    return false
+    local result={active=true,originals=originals}
+    state:set(POLICY_KEY,result)
+    if legacy and legacy.active then state:set(LEGACY_KEY,{active=false}) end
+    return result
+end
+
+local function restore(state, global_settings)
+    local previous=state:get(POLICY_KEY,nil)
+    local legacy=state:get(LEGACY_KEY,nil)
+    -- Upgrade or rollback directly from the 1.1.7 bridge.
+    if (not previous or not previous.active) and legacy and legacy.active then
+        previous={active=true,originals={[SIDE]=legacy.original==true}}
+    end
+    if not previous or not previous.active then return false end
+    -- Mark inactive FIRST to avoid overwriting old manual preferences if an
+    -- unrelated event runs after a change notification.
+    state:set(POLICY_KEY,{active=false})
+    if legacy and legacy.active then state:set(LEGACY_KEY,{active=false}) end
+    local modified=false
+    for name,value in pairs(previous.originals or {}) do
+        local owned=global_settings and global_settings[name]
+        if owned and owned.value~=value then
+            global_settings[name]={value=value}
+            modified=true
+        end
+    end
+    return modified
+end
+
+function M.sync(startup,global_settings,state)
+    local setting=startup and startup["razi-difficulty-preset"]
+    local selected=setting and setting.value
+    local profile=M.profiles[selected]
+    if not profile then return restore(state,global_settings) end
+    snapshot(state,global_settings)
+    local modified=false
+    for name,value in pairs(profile) do
+        local owned=global_settings and global_settings[name]
+        if owned and owned.value~=value then
+            -- Allowed only because these settings belong to THIS mod.
+            global_settings[name]={value=value}
+            modified=true
+        end
+    end
+    return modified
 end
 
 return M

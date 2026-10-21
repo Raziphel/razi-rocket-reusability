@@ -1,6 +1,6 @@
 {
   "name": "razi-rocket-reusability",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "title": "Razi Rocket Reusability",
   "author": "redplasticstraw (original); Raziphel (maintainer)",
   "factorio_version": "2.1",
@@ -12,5 +12,5 @@
     "? planet-muluna",
     "! rocket-reusability"
   ],
-  "description": "Recover spent rockets as orbital wrecks. In Razi Protocol Hard/Nightmare, the mod now synchronizes its own Map setting for side-arriving wrecks; previous manual choices are restored on other difficulties."
+  "description": "Rocket salvage with native Razi Protocol Hard/Nightmare integration. The owning mod synchronizes five actual Map settings, including recovery chance, cap, spawn distance and flank arrivals, then restores manual values."
 }
