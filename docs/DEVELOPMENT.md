@@ -13,7 +13,7 @@ This repository is the independent **Razi Rocket Reusability** maintenance fork,
 | `prototypes/remnant-beacon.lua` | Beacon item, entity, recipe and technology |
 | `graphics/`, `thumbnail.png` | Existing original-style mod artwork |
 | `locale/en/english.cfg` | Text shown in Factorio |
-| `scripts/` | Offline validation, regressions, reproducible image polish and ZIP assembly |
+| `scripts/` | Offline JavaScript regression tests and reproducible graphic polish |
 
 **RAZI Library** (`razi_lib >= 1.2.0`) supplies shared settings, data-stage helpers and runtime utilities. **Razi Protocol is not required.**
 
@@ -22,7 +22,7 @@ This repository is the independent **Razi Rocket Reusability** maintenance fork,
 Run the static source/manifest checks:
 
 ```bash
-python3 scripts/validate.py
+python3 ../razi-rocket-reusability-release-tooling/validate.py
 ```
 
 For local Lua smoke tests, Node.js is required. The dependencies are **developer-only** and are never shipped in the mod:
@@ -43,7 +43,7 @@ The Lua smoke-test harness uses **mocked Factorio APIs**. These checks catch reg
 ## Build the release archive
 
 ```bash
-python3 scripts/package.py
+python3 ../razi-rocket-reusability-release-tooling/package.py
 ```
 
 The archive is written to `dist/razi-rocket-reusability_<version>.zip`. Packaging is **allowlisted**: it includes playable files, metadata, existing graphics, and licensing, but excludes tests, developer documentation, backups and local tools.
@@ -69,3 +69,16 @@ The graphics are original-source artwork with only small contrast edits. Do not 
 ## License and attribution
 
 The original mod's author is **redplasticstraw**, source at https://github.com/minstrel1/rocket-reusability. Preserve both credits and [MIT license](../LICENSE).
+
+
+## Portal-safe source and upload
+
+Python maintenance tools are stored **outside the mod repository**. For a public checkout without the maintainer tooling, create a release archive from an explicit allowlist (never upload **GitHub Code → Download ZIP**):
+
+```bash
+name="razi-rocket-reusability_$(node -p 'require("./info.json").version')"
+mkdir -p dist
+git archive --format=zip --prefix="$name/" -o "dist/$name.zip" HEAD info.json LICENSE README.md changelog.txt thumbnail.png settings.lua data.lua data-final-fixes.lua control.lua graphics locale prototypes compatibility runtime
+```
+
+Check with `unzip -Z1 "dist/$name.zip"`. Files ending in `.exe`, `.bat`, `.ps1`, `.sh`, or `.py` must never appear in the package.

@@ -8,7 +8,7 @@ This is the **maintainer checklist**, not the public description. The ready-to-p
 | --- | --- |
 | Title | Razi Rocket Reusability |
 | Internal name / Mod Portal slug | `razi-rocket-reusability` |
-| Current source version | `1.1.5` |
+| Current source version | `1.1.9` |
 | Factorio version | `2.1` |
 | License | `MIT` |
 | Source code | https://github.com/Raziphel/razi-rocket-reusability |
@@ -25,10 +25,10 @@ This is the **maintainer checklist**, not the public description. The ready-to-p
 2. Perform a second real game-load with **K2 Spaced Out**. Check crusher categories, productivity and progression. Repeat with **Muluna** where possible.
 3. Test stationary and moving platforms, wide hulls, side-arrival mode at 0% and 100%, and changes to settings in existing saves. See [TESTING.md](TESTING.md).
 4. Back up saves before trying to replace the original mod. Matching prototype names **do not guarantee** that the mod-name transition preserves all game state.
-5. Run the repository checks from [DEVELOPMENT.md](DEVELOPMENT.md), including the package content check.
+5. Build the allowlisted mod ZIP using [DEVELOPMENT.md](DEVELOPMENT.md); reject any `.exe`, `.bat`, `.ps1`, `.sh` or `.py` entries. Do not upload a GitHub source archive.
 6. Review the [public description](../MOD_PORTAL.md) for accuracy and remove any testing caveats **only after the corresponding test is complete**.
 7. Upload the ZIP from `dist/` under the **new** internal name `razi-rocket-reusability`, never under the original mod's ID.
-8. Preserve the original author's credit and MIT license. The thumbnail in this repo is a conservative refinement of the original artwork.
+8. Preserve the original author's credit and MIT license. The thumbnail depicts the new Raziel dragon mascot.
 
 ## Release status
 

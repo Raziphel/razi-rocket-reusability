@@ -57,12 +57,12 @@ Offline smoke tests in the repository are useful, but do **not** replace in-game
 
 Run these in the repository's checkout:
 
-    python3 scripts/validate.py
+    python3 ../razi-rocket-reusability-release-tooling/validate.py
     npm install --prefix .tools --no-save fengari luaparse
     node scripts/test_razilib_integration.js /path/to/RaziLib
     node scripts/test_report_regressions.js /path/to/RaziLib
     node scripts/test_k2so_compatibility.js /path/to/RaziLib
     node scripts/test_side_arrivals.js /path/to/RaziLib
-    python3 scripts/package.py
+    python3 ../razi-rocket-reusability-release-tooling/package.py
 
 The generated ZIP is a **development build**, not a verified release, until in-game acceptance testing has been completed.

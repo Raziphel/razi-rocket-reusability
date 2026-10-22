@@ -5,3 +5,10 @@ dist/
 __pycache__/
 node_modules/
 .tools/
+
+# Mod Portal disallows these extensions in mod uploads.
+*.exe
+*.bat
+*.ps1
+*.sh
+*.py
